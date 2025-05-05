@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -32,7 +33,7 @@ public class WithIndexExistHandlerTest
         var handler = new StreetcodeWithIndexExistHandler(_repository.Object);
 
         // Act
-        var result = await handler.Handle(new StreetcodeWithIndexExistQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new StreetcodeWithIndexExistQuery(id, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -55,7 +56,7 @@ public class WithIndexExistHandlerTest
         var handler = new StreetcodeWithIndexExistHandler(_repository.Object);
 
         // Act
-        var result = await handler.Handle(new StreetcodeWithIndexExistQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new StreetcodeWithIndexExistQuery(id, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(

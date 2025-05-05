@@ -6,6 +6,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -52,7 +53,7 @@ public class GetTextByIdTest
         result.Value.Id.Should().Be(text.Id);
         _mockRepository.Verify(
             x => x.TextRepository.GetFirstOrDefaultAsync(
-                t => t.Id == request.Id,
+                t => t.Id == request.Id && t.Streetcode.Status == StreetcodeStatus.Published,
                 It.IsAny<Func<IQueryable<Text>, IIncludableQueryable<Text, object>>>()),
             Times.Once);
         _mockMapper.Verify(x => x.Map<TextDTO>(text), Times.Once);
@@ -112,6 +113,6 @@ public class GetTextByIdTest
 
     private static GetTextByIdQuery GetRequest(int textId)
     {
-        return new GetTextByIdQuery(textId);
+        return new GetTextByIdQuery(textId, UserRole.User);
     }
 }

@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -21,10 +23,11 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery,
 
     public Task<Result<GetAllToponymsResponseDTO>> Handle(GetAllToponymsQuery query, CancellationToken cancellationToken)
     {
-        var filterRequest = query.request;
+        var filterRequest = query.Request;
+        Expression<Func<Toponym, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), query.UserRole, t => t.Streetcodes);
 
-        var toponyms = _repositoryWrapper.ToponymRepository
-             .FindAll();
+        var toponyms = _repositoryWrapper.ToponymRepository.FindAll(predicate: predicate);
 
         if (filterRequest.Title is not null)
         {

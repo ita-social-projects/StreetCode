@@ -11,6 +11,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -54,13 +55,13 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         public async Task Handler_Returns_NotEmpty_List()
         {
             // Arrange
-            this.SetupPaginatedRepository(this.tags);
+            this.SetupGetAllAsync(this.tags);
             this.SetupMapper(this.tagDTOs);
 
             var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTagsQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -72,22 +73,21 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         public async Task Handler_Returns_Error()
         {
             // Arrange
-            this.SetupPaginatedRepository(new List<Tag>());
+            this.SetupGetAllAsync(new List<Tag>());
             this.SetupMapper(new List<TagDTO>());
 
-            var expectedError = $"Cannot find any tags";
+            var expectedError = "Cannot find any tags";
             this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTags"])
                 .Returns(new LocalizedString("CannotFindAnyTags", expectedError));
 
             var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTagsQuery(UserRole.User), CancellationToken.None);
 
             // Assert
-            Assert.Multiple(
-                () => Assert.IsType<List<TagDTO>>(result.Value.Tags),
-                () => Assert.Empty(result.Value.Tags));
+            Assert.True(result.IsFailed, "Expected result to be a failure.");
+            Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
         [Fact]
@@ -95,13 +95,13 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         {
             // Arrange
             ushort pageSize = 3;
-            this.SetupPaginatedRepository(this.tags.Take(pageSize));
+            this.SetupGetAllAsync(this.tags.Take(pageSize));
             this.SetupMapper(this.tagDTOs.Take(pageSize).ToList());
 
             var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTagsQuery(page: 1, pageSize: pageSize), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTagsQuery(UserRole.User, page: 1, pageSize: pageSize), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -109,22 +109,18 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 () => Assert.Equal(pageSize, result.Value.Tags.Count()));
         }
 
-        private void SetupPaginatedRepository(IEnumerable<Tag> returnList)
+        private void SetupGetAllAsync(IEnumerable<Tag> returnList)
         {
-            this.mockRepo.Setup(repo => repo.TagRepository.GetAllPaginated(
-                It.IsAny<ushort?>(),
-                It.IsAny<ushort?>(),
-                It.IsAny<Expression<Func<Tag, Tag>>?>(),
-                It.IsAny<Expression<Func<Tag, bool>>?>(),
-                It.IsAny<Func<IQueryable<Tag>, IIncludableQueryable<Tag, object>>?>(),
-                It.IsAny<Expression<Func<Tag, object>>?>(),
-                It.IsAny<Expression<Func<Tag, object>>?>()))
-            .Returns(PaginationResponse<Tag>.Create(returnList.AsQueryable()));
+            this.mockRepo.Setup(repo => repo.TagRepository.GetAllAsync(
+                It.IsAny<Expression<Func<Tag, bool>>>(),
+                It.IsAny<Func<IQueryable<Tag>, IIncludableQueryable<Tag, object>>>()
+            ))
+            .ReturnsAsync(returnList);
         }
 
         private void SetupMapper(List<TagDTO> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<Tag>>()))
                 .Returns(returnList);
         }
     }

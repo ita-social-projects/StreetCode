@@ -3,6 +3,7 @@ using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
+using MockQueryable.Moq;
 using Moq;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
@@ -201,6 +202,16 @@ public static class MockHelpers
                 It.IsAny<Expression<Func<User, bool>>>(),
                 It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
             .ReturnsAsync(new User { Email = email });
+    }
+
+    public static void SetupMockStreetcodeRepositoryFindAll(Mock<IRepositoryWrapper> mockRepositoryWrapper, IEnumerable<StreetcodeContent> streetcodeListUserCanAccess)
+    {
+        mockRepositoryWrapper.Setup(repo => repo.StreetcodeRepository
+                .FindAll(
+                    It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                    It.IsAny<Func<IQueryable<StreetcodeContent>,
+                        IIncludableQueryable<StreetcodeContent, object>>>()))
+            .Returns(streetcodeListUserCanAccess.AsQueryable().BuildMockDbSet().Object);
     }
 
     public static void SetupMockMapper<TDestination, TSource>(

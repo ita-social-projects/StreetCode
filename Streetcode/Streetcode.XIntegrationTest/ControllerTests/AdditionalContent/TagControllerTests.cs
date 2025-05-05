@@ -50,6 +50,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
+            TagEntity tag = this.testCreateTag;
+            TagExtracter.AddStreetcodeTagIndex(this.testStreetcodeContent.Id, tag.Id);
             var response = await this.Client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllTagsResponseDTO>(response.Content);
 
@@ -61,6 +63,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         public async Task GetById_ReturnSuccessStatusCode()
         {
             TagEntity expectedTag = this.testCreateTag;
+            TagExtracter.AddStreetcodeTagIndex(this.testStreetcodeContent.Id, expectedTag.Id);
+
             var response = await this.Client.GetByIdAsync(expectedTag.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
@@ -123,6 +127,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         public async Task GetByTitle_ReturnSuccessStatusCode()
         {
             TagEntity expectedTag = this.testCreateTag;
+            TagExtracter.AddStreetcodeTagIndex(this.testStreetcodeContent.Id, expectedTag.Id);
+
             var response = await this.Client.GetTagByTitle(expectedTag.Title);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
@@ -228,7 +234,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
             // Act
             await this.Client.CreateAsync(tagCreateDTO, this.TokenStorage.AdminAccessToken);
-            var getResponse = await this.Client.GetTagByTitle(tagCreateDTO.Title);
+            var getResponse = await this.Client.GetTagByTitle(tagCreateDTO.Title, this.TokenStorage.AdminAccessToken);
             var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<TagEntity>(getResponse.Content);
 
             // Assert

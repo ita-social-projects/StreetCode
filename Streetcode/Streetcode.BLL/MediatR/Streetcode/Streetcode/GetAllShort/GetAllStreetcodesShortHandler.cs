@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
@@ -29,25 +32,27 @@ public class GetAllStreetcodesShortHandler
         _stringLocalizerNo = stringLocalizerNo;
     }
 
-    public Task<Result<GetAllStreetcodesShortDto>> Handle(
-        GetAllStreetcodesShortQuery request,
-        CancellationToken cancellationToken)
+    public async Task<Result<GetAllStreetcodesShortDto>> Handle(GetAllStreetcodesShortQuery request, CancellationToken cancellationToken)
     {
-        var paginatedStreetcodesShort = _repositoryWrapper.StreetcodeRepository.GetAllPaginated(request.page, request.pageSize);
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+        var paginatedStreetcodesShort = _repositoryWrapper.StreetcodeRepository
+            .GetAllPaginated(request.page, request.pageSize, predicate: predicate);
 
         if (!paginatedStreetcodesShort.Entities.Any())
         {
             var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
-            return Task.FromResult(Result.Fail<GetAllStreetcodesShortDto>(errorMsg));
+            return Result.Fail<GetAllStreetcodesShortDto>(errorMsg);
         }
 
-        var getAllStreetcodeShortDto = new GetAllStreetcodesShortDto()
+        var resultDto = new GetAllStreetcodesShortDto
         {
             TotalAmount = paginatedStreetcodesShort.TotalItems,
             StreetcodesShort = _mapper.Map<IEnumerable<StreetcodeShortDto>>(paginatedStreetcodesShort.Entities),
         };
 
-        return Task.FromResult(Result.Ok(getAllStreetcodeShortDto));
+        return Result.Ok(resultDto);
     }
 }

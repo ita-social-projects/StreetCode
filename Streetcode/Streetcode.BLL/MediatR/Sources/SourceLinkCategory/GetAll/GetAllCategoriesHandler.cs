@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,8 +7,8 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -20,7 +21,13 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
         private readonly IBlobService _blobService;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
         private readonly ILoggerService _logger;
-        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+
+        public GetAllCategoriesHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            IBlobService blobService,
+            ILoggerService logger,
+            IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
@@ -29,36 +36,45 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public Task<Result<GetAllCategoriesResponseDTO>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
+        public async Task<Result<GetAllCategoriesResponseDTO>> Handle(
+            GetAllCategoriesQuery request,
+            CancellationToken cancellationToken)
         {
-            PaginationResponse<DAL.Entities.Sources.SourceLinkCategory> paginationResponse = _repositoryWrapper.SourceCategoryRepository
-                .GetAllPaginated(
-                    request.page,
-                    request.pageSize,
-                    include: cat => cat.Include(img => img.Image) !,
-                    descendingSortKeySelector: cat => cat.Title!);
+            Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>? basePredicate = null;
+            var predicate = basePredicate?.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sl => sl.Streetcodes);
 
-            if (paginationResponse is null)
-            {
-                string errorMsg = _stringLocalizerNo["NoCategories"].Value;
-                _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllCategoriesResponseDTO>(new Error(errorMsg)));
-            }
+            var allCategories = await _repositoryWrapper.SourceCategoryRepository
+                .FindAll(
+                    predicate: predicate ?? (cat => string.IsNullOrWhiteSpace(request.title) ||
+                                                      cat.Title.ToLower().Contains(request.title.ToLower())),
+                    include: cat => cat.Include(img => img.Image)!)
+                .ToListAsync(cancellationToken);
 
-            var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(paginationResponse.Entities);
+            var page = request.page ?? 1;
+            var pageSize = request.pageSize ?? 10;
+
+            var paginatedCategories = allCategories
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(paginatedCategories);
 
             foreach (var dto in dtos)
             {
-                dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
+                if (dto.Image is not null)
+                {
+                    dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
+                }
             }
 
-            GetAllCategoriesResponseDTO getAllCategoriesResponseDTO = new GetAllCategoriesResponseDTO
+            var getAllCategoriesResponseDTO = new GetAllCategoriesResponseDTO
             {
-                TotalAmount = paginationResponse.TotalItems,
-                Categories = dtos,
+                TotalAmount = allCategories.Count(),
+                Categories = dtos
             };
 
-            return Task.FromResult(Result.Ok(getAllCategoriesResponseDTO));
+            return Result.Ok(getAllCategoriesResponseDTO);
         }
     }
 }

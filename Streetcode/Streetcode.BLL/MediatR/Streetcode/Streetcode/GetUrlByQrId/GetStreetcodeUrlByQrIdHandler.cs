@@ -1,9 +1,12 @@
-﻿using FluentResults;
+﻿using System.Linq.Expressions;
+using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
@@ -34,7 +37,10 @@ public class GetStreetcodeUrlByQrIdHandler : IRequestHandler<GetStreetcodeUrlByQ
             return Result.Fail(new Error(errorMsg));
         }
 
-        var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync((s) => s.Id == statisticRecord.StreetcodeCoordinate.StreetcodeId);
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = s => s.Id == statisticRecord.StreetcodeCoordinate.StreetcodeId;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+        var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
         if(streetcode == null)
         {

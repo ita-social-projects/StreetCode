@@ -25,26 +25,56 @@ public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllT
         _blobService = blobService;
     }
 
-    public Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
     {
-        var paginationResponse = _repositoryWrapper
+        var searchTitle = request.title?.Trim().ToLower();
+        int page = request.page ?? 1;
+        int pageSize = request.pageSize ?? 10;
+
+        var allTeams = await _repositoryWrapper
             .TeamRepository
-            .GetAllPaginated(
-                request.page,
-                request.pageSize,
+            .GetAllAsync(
+                predicate: x => true,
                 include: x => x
                     .Include(x => x.Positions)
-                    .Include(x => x.TeamMemberLinks!)
-                    .Include(x => x.Image!));
+                    .Include(x => x.TeamMemberLinks)
+                    .Include(x => x.Image));
 
-        var teamMemberDtos = MapToTeamMemberDtos(paginationResponse.Entities);
+        var filteredContexts = allTeams.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(searchTitle))
+        {
+            filteredContexts = filteredContexts.Where(context =>
+                (!string.IsNullOrWhiteSpace(context.Name) &&
+                 context.Name.ToLower().Contains(searchTitle)) ||
+                (context.Positions != null &&
+                 context.Positions.Any(pos =>
+                     !string.IsNullOrWhiteSpace(pos.Position) &&
+                     pos.Position.ToLower().Contains(searchTitle))));
+        }
+
+        if (request.IsMain.HasValue)
+        {
+            filteredContexts = filteredContexts.Where(context => context.IsMain == request.IsMain.Value);
+            page = 1;
+        }
+
+        var totalItems = filteredContexts.Count();
+
+        var paginatedContexts = filteredContexts
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var teamMemberDtos = MapToTeamMemberDtos(paginatedContexts);
+
         var getAllTeamDto = new GetAllTeamDTO()
         {
-            TotalAmount = paginationResponse.TotalItems,
+            TotalAmount = totalItems,
             TeamMembers = teamMemberDtos,
         };
 
-        return Task.FromResult(Result.Ok(getAllTeamDto));
+        return Result.Ok(getAllTeamDto);
     }
 
     private IEnumerable<TeamMemberDTO> MapToTeamMemberDtos(IEnumerable<TeamMember> teamMemberEntities)

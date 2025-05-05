@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Art.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Xunit;
@@ -38,7 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllArtsQuery(), default);
+            var result = await handler.Handle(new GetAllArtsQuery(UserRole.User), default);
 
             // Assert
             Assert.Equal(this.GetArtsList().Count, result.Value.Count());
@@ -55,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllArtsQuery(), default);
+            var result = await handler.Handle(new GetAllArtsQuery(UserRole.User), default);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.Single().Message);
@@ -69,21 +70,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllArtsQuery(), default);
+            var result = await handler.Handle(new GetAllArtsQuery(UserRole.User), default);
 
             // Assert
             Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);
         }
 
-        private List<Art> GetArtsList()
+        private List<DAL.Entities.Media.Images.Art> GetArtsList()
         {
-             return new List<Art>()
+             return new List<DAL.Entities.Media.Images.Art>()
              {
-                new Art()
+                new ()
                 {
                     Id = 1,
                 },
-                new Art()
+                new ()
                 {
                     Id = 2,
                 },
@@ -105,12 +106,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             };
         }
 
-        private void MockRepositoryAndMapper(List<Art> artList, List<ArtDTO> artListDTO)
+        private void MockRepositoryAndMapper(List<DAL.Entities.Media.Images.Art> artList, List<ArtDTO> artListDTO)
         {
            this.mockRepo.Setup(r => r.ArtRepository.GetAllAsync(
-           It.IsAny<Expression<Func<Art, bool>>>(),
-           It.IsAny<Func<IQueryable<Art>,
-           IIncludableQueryable<Art, object>>>()))
+           It.IsAny<Expression<Func<DAL.Entities.Media.Images.Art, bool>>>(),
+           It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Art>,
+           IIncludableQueryable<DAL.Entities.Media.Images.Art, object>>>()))
            .ReturnsAsync(artList);
 
            this.mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))

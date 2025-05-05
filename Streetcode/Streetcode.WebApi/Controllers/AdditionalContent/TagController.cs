@@ -17,16 +17,16 @@ public class TagController : BaseApiController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTagsResponseDTO))]
-    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title)
     {
-        return HandleResult(await Mediator.Send(new GetAllTagsQuery(page, pageSize)));
+        return HandleResult(await Mediator.Send(new GetAllTagsQuery(GetUserRole(), page, pageSize, title)));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetTagByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetTagByIdQuery(id, GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -34,14 +34,14 @@ public class TagController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TagDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetTagByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetTagByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpGet("{title}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
     public async Task<IActionResult> GetTagByTitle([FromRoute] string title)
     {
-        return HandleResult(await Mediator.Send(new GetTagByTitleQuery(title)));
+        return HandleResult(await Mediator.Send(new GetTagByTitleQuery(title, GetUserRole())));
     }
 
     [HttpPost]

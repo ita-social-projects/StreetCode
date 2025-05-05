@@ -20,9 +20,9 @@ public class PartnersController : BaseApiController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllPartnersDto))]
-    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title, [FromQuery] bool? IsKeyPartner)
     {
-        return HandleResult(await Mediator.Send(new GetAllPartnersQuery(page, pageSize)));
+        return HandleResult(await Mediator.Send(new GetAllPartnersQuery(page, pageSize, title, IsKeyPartner)));
     }
 
     [HttpGet]
@@ -51,7 +51,7 @@ public class PartnersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PartnerDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetPartnersByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetPartnersByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -59,7 +59,7 @@ public class PartnersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PartnerDto>))]
     public async Task<IActionResult> GetPartnersToUpdateByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetPartnersToUpdateByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetPartnersToUpdateByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpPost]

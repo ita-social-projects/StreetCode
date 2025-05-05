@@ -20,8 +20,6 @@ public class StreetcodeCreateDTO : StreetcodeCreateUpdateDTO
 
     public int? AudioId { get; set; }
 
-    public IEnumerable<int> ImagesIds { get; set; } = new List<int>();
-
     public IEnumerable<StreetcodeTagDTO>? Tags { get; set; } = new List<StreetcodeTagDTO>();
 
     public IEnumerable<SubtitleCreateDTO>? Subtitles { get; set; } = new List<SubtitleCreateDTO>();

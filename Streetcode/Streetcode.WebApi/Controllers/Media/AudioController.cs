@@ -19,7 +19,7 @@ public class AudioController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AudioDTO>))]
     public async Task<IActionResult> GetAll()
     {
-        return HandleResult(await Mediator.Send(new GetAllAudiosQuery()));
+        return HandleResult(await Mediator.Send(new GetAllAudiosQuery(GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -27,21 +27,21 @@ public class AudioController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDTO))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetAudioByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetAudioByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id, GetUserRole())));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MemoryStream))]
     public async Task<IActionResult> GetBaseAudio([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetBaseAudioQuery(id)));
+        return HandleResult(await Mediator.Send(new GetBaseAudioQuery(id, GetUserRole())));
     }
 
     [HttpPost]

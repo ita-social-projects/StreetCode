@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Entities.Partners;
 
@@ -13,38 +16,64 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizeCannotFind;
     private readonly IBlobService _blobService;
 
     public GetAllPartnersHandler(
         IRepositoryWrapper repositoryWrapper,
         IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind,
         IBlobService blobService)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
+        _stringLocalizeCannotFind = stringLocalizeCannotFind;
         _blobService = blobService;
     }
 
-    public Task<Result<GetAllPartnersDto>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetAllPartnersDto>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
     {
-        var paginationResponse = _repositoryWrapper
-                .PartnersRepository
-                .GetAllPaginated(
-                    request.page,
-                    request.pageSize,
-                    include: partnersCollection => partnersCollection
-                        .Include(x => x.PartnerSourceLinks)
-                        .Include(x => x.Streetcodes)
-                        .Include(x => x.Logo!));
+        var searchTitle = request.title?.Trim().ToLower();
+        int page = request.page ?? 1;
+        int pageSize = request.pageSize ?? 10;
+        var partners = await _repositoryWrapper.PartnersRepository
+            .GetAllAsync(include: partnersCollection => partnersCollection
+                .Include(pl => pl.PartnerSourceLinks)
+                .Include(p => p.Streetcodes)
+                .Include(p => p.Logo));
 
-        var partnersDtos = MapToPartnerDtos(paginationResponse.Entities);
-        var getAllPartnersDto = new GetAllPartnersDto()
+        if (!string.IsNullOrWhiteSpace(searchTitle))
         {
-            TotalAmount = paginationResponse.TotalItems,
+            partners = partners.Where(context =>
+                !string.IsNullOrWhiteSpace(context.Title) &&
+                context.Title.ToLower().Contains(searchTitle));
+        }
+
+        if (request.IsKeyPartner.HasValue)
+        {
+            partners = partners.Where(context =>
+                context.IsKeyPartner == request.IsKeyPartner.Value);
+            page = 1;
+        }
+
+        var totalAmount = partners.Count();
+        var paginatedPartners = partners
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var partnersDtos = MapToPartnerDtos(paginatedPartners);
+
+        var getAllPartnersResponseDTO = new GetAllPartnersDto
+        {
+            TotalAmount = totalAmount,
             Partners = partnersDtos,
         };
 
-        return Task.FromResult(Result.Ok(getAllPartnersDto));
+        return Result.Ok(getAllPartnersResponseDTO);
     }
 
     private IEnumerable<PartnerDto> MapToPartnerDtos(IEnumerable<Partner> partnerEntities)

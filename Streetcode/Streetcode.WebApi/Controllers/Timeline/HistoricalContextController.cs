@@ -15,23 +15,23 @@ namespace Streetcode.WebApi.Controllers.Timeline
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllHistoricalContextDTO))]
-        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title)
         {
-            return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery(page, pageSize)));
+            return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery(GetUserRole(), page, pageSize, title)));
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HistoricalContextDTO))]
         public async Task<IActionResult> GetById(int id)
         {
-            return HandleResult(await Mediator.Send(new GetHistoricalContextByIdQuery(id)));
+            return HandleResult(await Mediator.Send(new GetHistoricalContextByIdQuery(id, GetUserRole())));
         }
 
         [HttpGet("{title}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HistoricalContextDTO))]
         public async Task<IActionResult> GetByTitle(string title)
         {
-            return HandleResult(await Mediator.Send(new GetHistoricalContextByTitleQuery(title)));
+            return HandleResult(await Mediator.Send(new GetHistoricalContextByTitleQuery(title, GetUserRole())));
         }
 
         [HttpPut]

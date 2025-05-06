@@ -34,10 +34,6 @@ public class WebParsingUtils
         ("просп. ",     "проспект"),
         ("вул. ",       "вулиця"),
         ("алея ",       "алея"),
-        ("бульв. ",     "бульвар"),
-        ("дорога ",     "дорога"),
-        ("дорога ",     "дорога"),
-        ("дорога ",     "дорога"),
         ("дорога ",     "дорога"),
         ("шосе ",       "шосе"),
         ("узвіз ",      "узвіз"),
@@ -81,7 +77,7 @@ public class WebParsingUtils
     {
         _ = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
         var zipPath = $"houses.zip";
-        
+
         // Change the path of extractTo to your path, smth like "/Users/admin/Documents/GitHub/StreetCode/Streetcode/Streetcode.DAL";
         var extractTo = $"/root/build/StreetCode/Streetcode/Streetcode.DAL";
 

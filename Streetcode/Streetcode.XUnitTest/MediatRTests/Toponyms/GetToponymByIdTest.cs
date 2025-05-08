@@ -34,12 +34,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
         {
             // Arrange
             var testToponym = GetToponym();
-            var testToponymDTO = GetToponymDTO();
+            var testToponymDto = GetToponymDto();
 
-            this.SetupRepository(testToponym);
-            this.SetupMapper(testToponymDTO);
+            SetupRepository(testToponym);
+            SetupMapper(testToponymDto);
 
-            var handler = new GetToponymByIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetToponymByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetToponymByIdQuery(testToponym.Id, UserRole.User), CancellationToken.None);
@@ -59,10 +59,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             var incorrectId = -1;
             var expectedError = $"Cannot find any toponym with corresponding id: {incorrectId}";
 
-            this.SetupRepository(null);
-            this.SetupLocalizer(incorrectId);
+            SetupRepository(null);
+            SetupLocalizer(incorrectId);
 
-            var handler = new GetToponymByIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetToponymByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetToponymByIdQuery(incorrectId, UserRole.User), CancellationToken.None);
@@ -81,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             };
         }
 
-        private static ToponymDTO GetToponymDTO()
+        private static ToponymDTO GetToponymDto()
         {
             return new ToponymDTO
             {
@@ -91,7 +91,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
 
         private void SetupRepository(Toponym? returnValue)
         {
-            this._mockRepository.Setup(x => x.ToponymRepository
+            _mockRepository.Setup(x => x.ToponymRepository
             .GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Toponym, bool>>>(),
                 It.IsAny<Func<IQueryable<Toponym>,
@@ -101,14 +101,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
 
         private void SetupMapper(ToponymDTO returnValue)
         {
-            this._mockMapper
+            _mockMapper
                 .Setup(x => x.Map<ToponymDTO>(It.IsAny<Toponym>()))
                 .Returns(returnValue);
         }
 
         private void SetupLocalizer(int incorrectId)
         {
-            this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int)
                 {

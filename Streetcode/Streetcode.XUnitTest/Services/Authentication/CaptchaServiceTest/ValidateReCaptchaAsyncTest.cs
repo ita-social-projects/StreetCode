@@ -9,30 +9,30 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
 {
     public class ValidateReCaptchaAsyncTest
     {
-        private readonly string reCaptchaUrl = "https://fakeUrl.com";
-        private readonly string reCaptchaSecretKey = "fake_secret_key";
-        private readonly string testReCaptchaToken = "test_reCaptcha_token";
-        private readonly IConfiguration fakeConfiguration;
-        private readonly Mock<HttpMessageHandler> mockHttpMessageHandler;
+        private const string ReCaptchaUrl = "https://fakeUrl.com";
+        private const string ReCaptchaSecretKey = "fake_secret_key";
+        private const string TestReCaptchaToken = "test_reCaptcha_token";
+        private readonly IConfiguration _fakeConfiguration;
+        private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidateReCaptchaAsyncTest"/> class.
         /// </summary>
         public ValidateReCaptchaAsyncTest()
         {
-            this.fakeConfiguration = this.GetFakeConfiguration();
-            this.mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            _fakeConfiguration = GetFakeConfiguration();
+            _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
         }
 
         [Fact]
         public async Task ShouldReturnSuccess_ValidCaptchaToken()
         {
             // Arrange.
-            this.SetupMockHttpClient(true);
-            var captchaService = this.GetCaptchaService();
+            SetupMockHttpClient(true);
+            var captchaService = GetCaptchaService();
 
             // Act.
-            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this.testReCaptchaToken);
+            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(TestReCaptchaToken);
 
             // Assert.
             Assert.True(captchaValidationResult.IsSuccess);
@@ -42,11 +42,11 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         public async Task ShouldFail_ReCaptchaRequestFailed()
         {
             // Arrange.
-            this.SetupMockHttpClient(false);
-            var captchaService = this.GetCaptchaService();
+            SetupMockHttpClient(false);
+            var captchaService = GetCaptchaService();
 
             // Act.
-            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this.testReCaptchaToken);
+            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(TestReCaptchaToken);
 
             // Assert.
             Assert.True(captchaValidationResult.IsFailed);
@@ -56,11 +56,11 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         public async Task ShouldFail_InvalidCaptcha()
         {
             // Arrange.
-            this.SetupMockHttpClient(true, false);
-            var captchaService = this.GetCaptchaService();
+            SetupMockHttpClient(true, false);
+            var captchaService = GetCaptchaService();
 
             // Act.
-            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this.testReCaptchaToken);
+            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(TestReCaptchaToken);
 
             // Assert.
             Assert.True(captchaValidationResult.IsFailed);
@@ -73,7 +73,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
             {
                 Content = new StringContent($$"""{ "success": {{isCaptchaValid.ToString().ToLower()}}, "errorCodes": [] }"""),
             };
-            this.mockHttpMessageHandler
+            _mockHttpMessageHandler
                 .Protected()
                .Setup<Task<HttpResponseMessage>>(
                   "SendAsync",
@@ -86,8 +86,8 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         {
             var appSettingsStub = new Dictionary<string, string?>
             {
-                { "ReCaptcha:Url", this.reCaptchaUrl },
-                { "ReCaptcha:SecretKey", this.reCaptchaSecretKey },
+                { "ReCaptcha:Url", ReCaptchaUrl },
+                { "ReCaptcha:SecretKey", ReCaptchaSecretKey },
             };
             var fakeConfiguration = new ConfigurationBuilder()
             .AddInMemoryCollection(appSettingsStub)
@@ -99,8 +99,8 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         private CaptchaService GetCaptchaService()
         {
             return new CaptchaService(
-                this.fakeConfiguration,
-                new HttpClient(this.mockHttpMessageHandler.Object));
+                _fakeConfiguration,
+                new HttpClient(_mockHttpMessageHandler.Object));
         }
     }
 }

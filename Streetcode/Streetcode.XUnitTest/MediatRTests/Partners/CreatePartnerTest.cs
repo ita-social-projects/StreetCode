@@ -16,23 +16,23 @@ namespace Streetcode.XUnitTest.MediatRTests.Partners;
 
 public class CreatePartnerTest
 {
-    private readonly Mock<IRepositoryWrapper> mockRepository;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<NoSharedResource>> mockLocalizerNoShared;
-    private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockLocalizerFieldNames;
-    private readonly Mock<IStringLocalizer<AlreadyExistSharedResource>> mockLocalizerAlreadyExist;
-    private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFailedToCreate;
+    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNoShared;
+    private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> _mockLocalizerFieldNames;
+    private readonly Mock<IStringLocalizer<AlreadyExistSharedResource>> _mockLocalizerAlreadyExist;
+    private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFailedToCreate;
 
     public CreatePartnerTest()
     {
-        this.mockRepository = new Mock<IRepositoryWrapper>();
-        this.mockMapper = new Mock<IMapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
-        this.mockLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
-        this.mockLocalizerAlreadyExist = new Mock<IStringLocalizer<AlreadyExistSharedResource>>();
-        this.mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+        _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
+        _mockLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+        _mockLocalizerAlreadyExist = new Mock<IStringLocalizer<AlreadyExistSharedResource>>();
+        _mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
     }
 
     [Fact]
@@ -41,22 +41,22 @@ public class CreatePartnerTest
         // Arrange
         var testPartner = GetPartner();
 
-        this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
+        _mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
             .Returns(testPartner);
-        this.mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
+        _mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDto());
 
-        this.mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
+        _mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
             .ReturnsAsync(testPartner);
-        this.mockRepository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
+        _mockRepository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
             .ReturnsAsync(new List<StreetcodeContent>());
-        this.mockRepository.Setup(x => x.SaveChanges())
+        _mockRepository.Setup(x => x.SaveChanges())
             .Returns(1);
 
         var handler = new CreatePartnerHandler(
-            this.mockRepository.Object,
-            this.mockMapper.Object,
-            this.mockLogger.Object);
+            _mockRepository.Object,
+            _mockMapper.Object,
+            _mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDto()), CancellationToken.None);
@@ -71,22 +71,22 @@ public class CreatePartnerTest
         // Arrange
         var testPartner = GetPartner();
 
-        this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
+        _mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
             .Returns(testPartner);
-        this.mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
+        _mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDto());
 
-        this.mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
+        _mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
             .ReturnsAsync(testPartner);
-        this.mockRepository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
+        _mockRepository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
             .ReturnsAsync(new List<StreetcodeContent>());
-        this.mockRepository.Setup(x => x.SaveChanges())
+        _mockRepository.Setup(x => x.SaveChanges())
             .Returns(1);
 
         var handler = new CreatePartnerHandler(
-            this.mockRepository.Object,
-            this.mockMapper.Object,
-            this.mockLogger.Object);
+            _mockRepository.Object,
+            _mockMapper.Object,
+            _mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDto()), CancellationToken.None);

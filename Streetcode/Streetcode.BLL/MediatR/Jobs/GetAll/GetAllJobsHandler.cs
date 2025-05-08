@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -6,7 +6,6 @@ using Streetcode.BLL.DTO.Jobs;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Entities.Jobs;
-using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Jobs.GetAll
@@ -42,24 +41,24 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
                     .FindAll(predicate)
                     .ToList();
 
-                var filteredJobs = string.IsNullOrWhiteSpace(request.title)
+                var filteredJobs = string.IsNullOrWhiteSpace(request.Title)
                     ? allJobs
                     : allJobs
                         .Where(p =>
                         {
-                            if (string.IsNullOrWhiteSpace(p?.Title) || string.IsNullOrWhiteSpace(request.title))
+                            if (string.IsNullOrWhiteSpace(p?.Title) || string.IsNullOrWhiteSpace(request.Title))
                             {
                                 return false;
                             }
 
                             string trimmedTitle = p.Title.Trim().ToLower();
-                            string searchTitle = request.title.Trim().ToLower();
+                            string searchTitle = request.Title.Trim().ToLower();
                             return trimmedTitle.Contains(searchTitle);
                         })
                         .ToList();
 
-                int page = request.page ?? 1;
-                int pageSize = request.pageSize ?? 10;
+                int page = request.Page ?? 1;
+                int pageSize = request.PageSize ?? 10;
 
                 var pagedJobs = filteredJobs
                     .Skip((page - 1) * pageSize)

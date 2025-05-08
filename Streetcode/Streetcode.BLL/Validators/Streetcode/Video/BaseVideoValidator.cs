@@ -8,7 +8,7 @@ namespace Streetcode.BLL.Validators.Streetcode.Video;
 
 public class BaseVideoValidator : AbstractValidator<VideoCreateUpdateDTO>
 {
-    public static readonly List<string> VideoHosts = new()
+    private static readonly List<string> VideoHosts = new()
     {
         "www.youtube.com",
         "youtube.com",

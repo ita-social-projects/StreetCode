@@ -6,6 +6,7 @@ using Streetcode.BLL.MediatR.Jobs.Create;
 using Streetcode.BLL.MediatR.Jobs.Delete;
 using Streetcode.BLL.MediatR.Jobs.GetActiveJobs;
 using Streetcode.BLL.MediatR.Jobs.GetAll;
+using Streetcode.BLL.MediatR.Jobs.GetAllShort;
 using Streetcode.BLL.MediatR.Jobs.GetById;
 using Streetcode.BLL.MediatR.Jobs.Update;
 using Streetcode.DAL.Enums;

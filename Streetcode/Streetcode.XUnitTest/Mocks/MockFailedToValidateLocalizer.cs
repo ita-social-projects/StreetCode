@@ -51,6 +51,7 @@ public class MockFailedToValidateLocalizer : BaseMockStringLocalizer<FailedToVal
                     "MustBeOneOf",
                     "MaxLength",
                     "MinLength",
+                    "MaxCountExceeded",
                 }
             },
             {

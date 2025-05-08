@@ -327,4 +327,7 @@
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="TeamMemberLinks" xml:space="preserve">
+    <value>Team member links</value>
+  </data>
 </root>

@@ -15,17 +15,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Partners;
 
 public class GetPartnerByIdTest
 {
-    private readonly Mock<IRepositoryWrapper> mockRepository;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
     public GetPartnerByIdTest()
     {
-        this.mockMapper = new Mock<IMapper>();
-        this.mockRepository = new Mock<IRepositoryWrapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockMapper = new Mock<IMapper>();
+        _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -34,19 +34,19 @@ public class GetPartnerByIdTest
         // Arrange
         var testPartner = GetPartner();
 
-        this.mockRepository.Setup(x => x.PartnersRepository
+        _mockRepository.Setup(x => x.PartnersRepository
             .GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<Partner, bool>>>(),
                 It.IsAny<Func<IQueryable<Partner>,
                 IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(testPartner);
 
-        this.mockMapper
+        _mockMapper
             .Setup(x => x
             .Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
-        var handler = new GetPartnerByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+        var handler = new GetPartnerByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetPartnerByIdQuery(testPartner.Id), CancellationToken.None);
@@ -64,7 +64,7 @@ public class GetPartnerByIdTest
         // Arrange
         var testPartner = GetPartner();
         var expectedError = $"Cannot find any partner with corresponding id: {testPartner.Id}";
-        this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
         {
             if (args != null && args.Length > 0 && args[0] is int)
             {
@@ -74,19 +74,19 @@ public class GetPartnerByIdTest
             return new LocalizedString(key, "Cannot find any partner with unknown id");
         });
 
-        this.mockRepository.Setup(x => x.PartnersRepository
+        _mockRepository.Setup(x => x.PartnersRepository
             .GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<Partner, bool>>>(),
                 It.IsAny<Func<IQueryable<Partner>,
                 IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(GetPartnerWithNotExistingId());
 
-        this.mockMapper
+        _mockMapper
             .Setup(x => x
             .Map<PartnerDto?>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTOWithNotExistingId());
 
-        var handler = new GetPartnerByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+        var handler = new GetPartnerByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetPartnerByIdQuery(testPartner.Id), CancellationToken.None);
@@ -103,19 +103,19 @@ public class GetPartnerByIdTest
         // Arrange
         var testPartner = GetPartner();
 
-        this.mockRepository.Setup(x => x.PartnersRepository
+        _mockRepository.Setup(x => x.PartnersRepository
             .GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<Partner, bool>>>(),
                 It.IsAny<Func<IQueryable<Partner>,
                 IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(testPartner);
 
-        this.mockMapper
+        _mockMapper
             .Setup(x => x
             .Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
-        var handler = new GetPartnerByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+        var handler = new GetPartnerByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetPartnerByIdQuery(testPartner.Id), CancellationToken.None);

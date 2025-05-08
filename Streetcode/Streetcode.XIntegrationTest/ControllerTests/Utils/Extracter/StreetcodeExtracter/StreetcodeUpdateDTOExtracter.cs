@@ -68,6 +68,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
                 Title = "Test_Title",
                 DateString = "тест-2024",
                 Teaser = "Test_Teaser",
+                EventStartOrPersonBirthDate = new DateTime(2000, 2, 3, 0, 0, 0, DateTimeKind.Local),
                 Tags = new List<StreetcodeTagUpdateDTO>(),
                 Facts = new List<StreetcodeFactUpdateDTO>(),
                 Audios = new List<AudioUpdateDTO>(),

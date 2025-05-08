@@ -8,7 +8,6 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.BLL.Validators.News;
-using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -285,8 +284,11 @@ public class NewsTests
         SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText("Test Text", 1); // The Id will be 2, so the method will return false
         SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingUrl("test-url23", 1); // The Id will be 2, so the method will return false
 
-        var baseValidator = new Mock<BaseNewsValidator>(_mockValidationLocalizer, _mockFieldsLocalizer,
+        var baseValidator = new Mock<BaseNewsValidator>(
+            _mockValidationLocalizer,
+            _mockFieldsLocalizer,
             _mockRepositoryWrapper.Object);
+
         baseValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDTO>>(), default))
             .ReturnsAsync(new ValidationResult());
 

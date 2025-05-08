@@ -8,7 +8,6 @@ using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetByStreetcodeId;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -34,11 +33,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task ReturnsSuccessfully_NotEmpty()
         {
             // Arrange
-            this.SetupRepository(GetExistingTimelineList());
+            SetupRepository(GetExistingTimelineList());
 
-            this.SetupMapper(GetTimelineItemDTOList());
+            SetupMapper(GetTimelineItemDtoList());
 
-            var handler = new GetTimelineItemsByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object);
+            var handler = new GetTimelineItemsByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
             int streetcodeId = 1;
 
             // Act
@@ -55,9 +54,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task ReturnsSuccessfully_Empty()
         {
             // Arrange
-            this.SetupRepository(GetEmptyTimelineList());
+            SetupRepository(GetEmptyTimelineList());
 
-            var handler = new GetTimelineItemsByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object);
+            var handler = new GetTimelineItemsByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
             int streetcodeId = 1;
 
             // Act
@@ -92,7 +91,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             return new List<TimelineItem>();
         }
 
-        private static List<TimelineItemDTO> GetTimelineItemDTOList()
+        private static List<TimelineItemDTO> GetTimelineItemDtoList()
         {
             return new List<TimelineItemDTO>
             {

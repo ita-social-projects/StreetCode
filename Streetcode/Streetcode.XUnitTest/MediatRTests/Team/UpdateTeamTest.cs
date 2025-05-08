@@ -13,15 +13,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 {
     public class UpdateTeamTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public UpdateTeamTest()
         {
-            this.mockMapper = new Mock<IMapper>();
-            this.mockRepository = new Mock<IRepositoryWrapper>();
-            this.mockLogger = new Mock<ILoggerService>();
+            _mockMapper = new Mock<IMapper>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -29,14 +29,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             // Arrange
             var teamMember = GetTeamMember(1);
-            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDto());
 
-            this.MapperSetup(teamMember, updateQuery.TeamMember);
-            this.BasicRepositorySetup(updateQuery.TeamMember);
-            this.GetsAsyncRepositorySetup(teamMember);
-            this.mockRepository.Setup(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()));
+            MapperSetup(teamMember, updateQuery.TeamMember);
+            BasicRepositorySetup(updateQuery.TeamMember);
+            GetsAsyncRepositorySetup(teamMember);
+            _mockRepository.Setup(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()));
 
-            var handler = new UpdateTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+            var handler = new UpdateTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(updateQuery, CancellationToken.None);
@@ -54,14 +54,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             const string exceptionMessage = "Failed to update a team";
 
             var teamMember = GetTeamMember(1);
-            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
-            this.MapperSetup(teamMember, updateQuery.TeamMember);
-            this.BasicRepositorySetup(updateQuery.TeamMember);
-            this.GetsAsyncRepositorySetup(teamMember);
-            this.mockRepository.Setup(repo => repo.SaveChangesAsync())
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDto());
+            MapperSetup(teamMember, updateQuery.TeamMember);
+            BasicRepositorySetup(updateQuery.TeamMember);
+            GetsAsyncRepositorySetup(teamMember);
+            _mockRepository.Setup(repo => repo.SaveChangesAsync())
             .Throws(new Exception(exceptionMessage));
 
-            var handler = new UpdateTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+            var handler = new UpdateTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(updateQuery, CancellationToken.None);
@@ -76,23 +76,23 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             // Arrange
             var teamMember = GetTeamMember(1);
-            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDto());
             var existingLinks = GetTeamMemberLinksList().ToList();
             existingLinks.Add(new TeamMemberLink { Id = unusedLinkId });
 
-            this.MapperSetup(teamMember, updateQuery.TeamMember);
-            this.BasicRepositorySetup(updateQuery.TeamMember);
-            this.GetsAsyncRepositorySetup(teamMember, link: existingLinks);
-            this.mockRepository.Setup(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()));
-            this.mockRepository.Setup(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()));
+            MapperSetup(teamMember, updateQuery.TeamMember);
+            BasicRepositorySetup(updateQuery.TeamMember);
+            GetsAsyncRepositorySetup(teamMember, link: existingLinks);
+            _mockRepository.Setup(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()));
+            _mockRepository.Setup(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()));
 
-            var handler = new UpdateTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+            var handler = new UpdateTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(updateQuery, CancellationToken.None);
 
             // Assert
-            this.mockRepository.Verify(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()), Times.Once);
+            _mockRepository.Verify(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()), Times.Once);
             Assert.True(result.IsSuccess);
         }
 
@@ -102,22 +102,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             // Arrange
             var teamMember = GetTeamMember(1);
-            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDto());
             var existingPositions = GetTeamMemberPositionsList().ToList();
             existingPositions.Add(GetTeamMemberPositions(teamMember.Id, unusedPositionId));
 
-            this.MapperSetup(teamMember, updateQuery.TeamMember);
-            this.BasicRepositorySetup(updateQuery.TeamMember);
-            this.GetsAsyncRepositorySetup(teamMember, memberPos: existingPositions);
-            this.mockRepository.Setup(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()));
+            MapperSetup(teamMember, updateQuery.TeamMember);
+            BasicRepositorySetup(updateQuery.TeamMember);
+            GetsAsyncRepositorySetup(teamMember, memberPos: existingPositions);
+            _mockRepository.Setup(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()));
 
-            var handler = new UpdateTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+            var handler = new UpdateTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(updateQuery, CancellationToken.None);
 
             // Assert
-            this.mockRepository.Verify(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()), Times.Once);
+            _mockRepository.Verify(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()), Times.Once);
             Assert.True(result.IsSuccess);
         }
 
@@ -139,14 +139,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
             var updateQuery = new UpdateTeamQuery(teamMemberDto);
 
-            this.MapperSetup(teamMember, updateQuery.TeamMember);
-            this.BasicRepositorySetup(updateQuery.TeamMember);
-            this.GetsAsyncRepositorySetup(teamMember, memberPos: existingPositions);
-            this.mockRepository.Setup(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()));
-            this.mockRepository.Setup(repo => repo.TeamPositionRepository.CreateAsync(It.IsAny<TeamMemberPositions>()));
-            this.mockRepository.Setup(repo => repo.PositionRepository.CreateAsync(It.IsAny<Positions>())).ReturnsAsync(new Positions());
+            MapperSetup(teamMember, updateQuery.TeamMember);
+            BasicRepositorySetup(updateQuery.TeamMember);
+            GetsAsyncRepositorySetup(teamMember, memberPos: existingPositions);
+            _mockRepository.Setup(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()));
+            _mockRepository.Setup(repo => repo.TeamPositionRepository.CreateAsync(It.IsAny<TeamMemberPositions>()));
+            _mockRepository.Setup(repo => repo.PositionRepository.CreateAsync(It.IsAny<Positions>())).ReturnsAsync(new Positions());
 
-            var handler = new UpdateTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+            var handler = new UpdateTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(updateQuery, CancellationToken.None);
@@ -156,8 +156,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 () => Assert.True(result.IsSuccess),
                 () => Assert.Equal(0, result.Value.Id));
 
-            this.mockRepository.Verify(repo => repo.PositionRepository.CreateAsync(It.IsAny<Positions>()), Times.Once);
-            this.mockRepository.Verify(repo => repo.TeamPositionRepository.CreateAsync(It.IsAny<TeamMemberPositions>()), Times.Once);
+            _mockRepository.Verify(repo => repo.PositionRepository.CreateAsync(It.IsAny<Positions>()), Times.Once);
+            _mockRepository.Verify(repo => repo.TeamPositionRepository.CreateAsync(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
 
         private static TeamMember GetTeamMember(int imageId = 0)
@@ -174,7 +174,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static UpdateTeamMemberDTO GetTeamMemberDTO()
+        private static UpdateTeamMemberDTO GetTeamMemberDto()
         {
             return new UpdateTeamMemberDTO
             {
@@ -182,8 +182,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 Name = "Test",
                 Description = "Test",
                 IsMain = true,
-                Positions = GetPositionsDTOList(),
-                TeamMemberLinks = GetTeamMemberLinksDTOList(),
+                Positions = GetPositionsDtoList(),
+                TeamMemberLinks = GetTeamMemberLinksDtoList(),
             };
         }
 
@@ -196,7 +196,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static List<PositionDTO> GetPositionsDTOList()
+        private static List<PositionDTO> GetPositionsDtoList()
         {
             return new List<PositionDTO>
             {
@@ -223,7 +223,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static List<TeamMemberLinkDTO> GetTeamMemberLinksDTOList()
+        private static List<TeamMemberLinkDTO> GetTeamMemberLinksDtoList()
         {
             return new List<TeamMemberLinkDTO>
             {
@@ -243,12 +243,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
         private void BasicRepositorySetup(UpdateTeamMemberDTO updatedTeamMember)
         {
-            this.mockRepository.Setup(repo => repo.TeamRepository.Update(It.IsAny<TeamMember>()))
+            _mockRepository.Setup(repo => repo.TeamRepository.Update(It.IsAny<TeamMember>()))
             .Callback<TeamMember>(tm =>
             {
                 tm.Positions = updatedTeamMember.Positions?.Select(p => new Positions { Id = p.Id, Position = p.Position }).ToList();
             });
-            this.mockRepository.Setup(repo => repo.SaveChangesAsync());
+            _mockRepository.Setup(repo => repo.SaveChangesAsync());
         }
 
         private void GetsAsyncRepositorySetup(TeamMember teamMember, List<TeamMemberLink>? link = null, List<TeamMemberPositions>? memberPos = null)
@@ -256,21 +256,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             var linkList = link ?? teamMember.TeamMemberLinks!;
             var posList = memberPos ?? new List<TeamMemberPositions>();
 
-            this.mockRepository.Setup(repo => repo.TeamLinkRepository
+            _mockRepository.Setup(repo => repo.TeamLinkRepository
                .GetAllAsync(It.IsAny<Expression<Func<TeamMemberLink, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberLink>,
                IIncludableQueryable<TeamMemberLink, object>>>())).ReturnsAsync(linkList);
 
-            this.mockRepository.Setup(repo => repo.TeamPositionRepository
+            _mockRepository.Setup(repo => repo.TeamPositionRepository
                .GetAllAsync(It.IsAny<Expression<Func<TeamMemberPositions, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberPositions>,
                IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(posList);
         }
 
         private void MapperSetup(TeamMember teamMember, UpdateTeamMemberDTO updatedTeamMember)
         {
-            this.mockMapper.Setup(mapper => mapper.Map<TeamMember>(updatedTeamMember))
+            _mockMapper.Setup(mapper => mapper.Map<TeamMember>(updatedTeamMember))
                 .Returns(teamMember);
 
-            this.mockMapper.Setup(mapper => mapper.Map<UpdateTeamMemberDTO>(teamMember))
+            _mockMapper.Setup(mapper => mapper.Map<UpdateTeamMemberDTO>(teamMember))
                 .Returns(updatedTeamMember);
         }
     }

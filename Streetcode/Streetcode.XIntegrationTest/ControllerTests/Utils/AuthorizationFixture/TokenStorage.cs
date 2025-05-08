@@ -16,7 +16,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture
         private readonly ITokenService _tokenService;
         private readonly Dictionary<string, User> _users;
 
-        private bool disposed;
+        private bool _disposed;
 
         public TokenStorage()
         {
@@ -56,14 +56,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _streetcodeDbContext.Dispose();
                 }
 
-                disposed = true;
+                _disposed = true;
             }
         }
 
@@ -78,7 +78,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture
             return configBuilder.Build();
         }
 
-        private StreetcodeDbContext GetDbContext()
+        private static StreetcodeDbContext GetDbContext()
         {
             var sqlConnectionString = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.IntegrationTests.json")

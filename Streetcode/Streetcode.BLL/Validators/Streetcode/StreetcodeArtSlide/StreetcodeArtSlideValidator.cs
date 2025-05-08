@@ -16,7 +16,7 @@ public class StreetcodeArtSlideValidator : AbstractValidator<StreetcodeArtSlideC
             .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["Template"]]);
         RuleFor(dto => dto.StreetcodeArts)
             .Must(arts => !HasDuplicateArtIds(arts))
-            .WithMessage("Цей арт уже є в цьому слайді");
+            .WithMessage(localizer["MustBeUnique", fieldLocalizer["StreetcodeArts"]]);
     }
 
     private bool HasDuplicateArtIds(IEnumerable<StreetcodeArtCreateUpdateDTO> arts)

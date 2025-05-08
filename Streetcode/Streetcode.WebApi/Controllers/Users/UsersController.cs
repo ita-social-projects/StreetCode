@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Users.GetByEmail;
 using Streetcode.BLL.MediatR.Users.GetOtherUserByUserName;
 using Streetcode.BLL.MediatR.Users.Update;
 using Streetcode.BLL.MediatR.Users.UpdateForgotPassword;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Streetcode.WebApi.Controllers.Users
 {
@@ -55,6 +56,7 @@ namespace Streetcode.WebApi.Controllers.Users
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [EnableRateLimiting("ForgotPasswordRateLimit")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO forgotPasswordDto)
         {
             return HandleResult(await Mediator.Send(new ForgotPasswordCommand(forgotPasswordDto)));

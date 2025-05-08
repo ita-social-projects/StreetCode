@@ -15,13 +15,13 @@ namespace Streetcode.XUnitTest.Validators.Jobs;
 
 public class CreateJobsValidatorTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
 
     public CreateJobsValidatorTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class CreateJobsValidatorTests
     {
         // Arrange
         var baseValidator =
-            new Mock<BaseJobsValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+            new Mock<BaseJobsValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
         baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateJobDto>>()))
             .Returns(new ValidationResult());
         var updateValidator = new CreateJobsValidator(baseValidator.Object);

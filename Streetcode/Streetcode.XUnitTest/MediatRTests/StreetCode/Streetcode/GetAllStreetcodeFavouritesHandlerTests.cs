@@ -110,7 +110,7 @@ public class GetAllStreetcodeFavouritesHandlerTests
         // Assert
         foreach (var streetcode in result.Value)
         {
-            Assert.Equal(streetcode.Type, StreetcodeType.Person);
+            Assert.Equal(StreetcodeType.Person, streetcode.Type);
         }
     }
 

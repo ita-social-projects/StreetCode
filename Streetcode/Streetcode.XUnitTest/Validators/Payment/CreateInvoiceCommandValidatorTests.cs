@@ -9,25 +9,25 @@ namespace Streetcode.XUnitTest.Validators.Payment;
 
 public class CreateInvoiceCommandValidatorTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly CreateInvoiceCommandValidator validator;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly CreateInvoiceCommandValidator _validator;
 
     public CreateInvoiceCommandValidatorTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.validator = new CreateInvoiceCommandValidator(this.mockNamesLocalizer, this.mockValidationLocalizer);
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _validator = new CreateInvoiceCommandValidator(_mockNamesLocalizer, _mockValidationLocalizer);
     }
 
     [Fact]
     public void ShouldReturnSuccessResult_WhenInvoiceIsValid()
     {
         // Arrange
-        var command = this.GetValidCreateInvoiceCommand();
+        var command = GetValidCreateInvoiceCommand();
 
         // Act
-        var result = this.validator.Validate(command);
+        var result = _validator.Validate(command);
 
         // Assert
         Assert.True(result.IsValid);
@@ -37,12 +37,12 @@ public class CreateInvoiceCommandValidatorTests
     public void ShouldReturnError_WhenRedirectUrlIsEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["RedirectUrl"]];
-        var command = this.GetValidCreateInvoiceCommand();
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["RedirectUrl"]];
+        var command = GetValidCreateInvoiceCommand();
         command.Payment.RedirectUrl = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(command);
+        var result = _validator.TestValidate(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(s => s.Payment.RedirectUrl)
@@ -53,19 +53,19 @@ public class CreateInvoiceCommandValidatorTests
     public void ShouldReturnError_WhenAmountIsLessThanZero()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["GreaterThan", this.mockNamesLocalizer["Amount"], 0];
-        var command = this.GetValidCreateInvoiceCommand();
+        var expectedError = _mockValidationLocalizer["GreaterThan", _mockNamesLocalizer["Amount"], 0];
+        var command = GetValidCreateInvoiceCommand();
         command.Payment.Amount = -100;
 
         // Act
-        var result = this.validator.TestValidate(command);
+        var result = _validator.TestValidate(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(s => s.Payment.Amount)
             .WithErrorMessage(expectedError);
     }
 
-    public CreateInvoiceCommand GetValidCreateInvoiceCommand()
+    private static CreateInvoiceCommand GetValidCreateInvoiceCommand()
     {
         return new CreateInvoiceCommand(new PaymentDTO()
         {

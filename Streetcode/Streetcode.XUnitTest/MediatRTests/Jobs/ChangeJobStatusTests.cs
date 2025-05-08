@@ -44,7 +44,7 @@ public class ChangeJobStatusHandlerTests
         _mockLocalizer.Setup(l => l["CannotFindJobWithCorrespondingId", request.jobChangeStatusDto.Id])
             .Returns(new LocalizedString("CannotFindJobWithCorrespondingId", "Cannot find job with ID 1"));
         
-        var handler = new ChangeJobStatusHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
+        var handler = new ChangeJobStatusHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
         
         // Act
         var result = await handler.Handle(request, CancellationToken.None);
@@ -62,12 +62,12 @@ public class ChangeJobStatusHandlerTests
         var request = new ChangeJobStatusCommand(new JobChangeStatusDto { Id = 1, Status = true });
         _mockRepository.Setup(r => r.JobRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Job, bool>>>(), null))
             .ReturnsAsync(job);
-        
-        var handler = new ChangeJobStatusHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
-        
+
+        var handler = new ChangeJobStatusHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
+
         // Act
         var result = await handler.Handle(request, CancellationToken.None);
-        
+
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(1);
@@ -83,7 +83,7 @@ public class ChangeJobStatusHandlerTests
             .ReturnsAsync(job);
         _mockRepository.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
         
-        var handler = new ChangeJobStatusHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
+        var handler = new ChangeJobStatusHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
         
         // Act
         var result = await handler.Handle(request, CancellationToken.None);
@@ -105,7 +105,7 @@ public class ChangeJobStatusHandlerTests
             .ReturnsAsync(job);
         _mockRepository.Setup(r => r.SaveChangesAsync()).ThrowsAsync(new Exception("Database error"));
         
-        var handler = new ChangeJobStatusHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
+        var handler = new ChangeJobStatusHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
         
         // Act
         var result = await handler.Handle(request, CancellationToken.None);

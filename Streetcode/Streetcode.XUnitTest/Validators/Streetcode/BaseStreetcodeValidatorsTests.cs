@@ -252,10 +252,9 @@ public class BaseStreetcodeValidatorsTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenDateStringIsEmpty()
+    public void ShouldNotReturnError_WhenDateStringIsEmpty()
     {
         // Arrange
-        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["DateString"]];
         var streetcode = GetValidStreetcodeDto();
         streetcode.DateString = string.Empty;
 
@@ -263,8 +262,7 @@ public class BaseStreetcodeValidatorsTests
         var result = _validator.TestValidate(streetcode);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.DateString)
-            .WithErrorMessage(expectedError);
+        result.ShouldNotHaveValidationErrorFor(x => x.DateString);
     }
 
     [Fact]
@@ -433,7 +431,7 @@ public class BaseStreetcodeValidatorsTests
         _mockArtValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDTO>>()), Times.AtLeast(1));
     }
 
-    private StreetcodeCreateUpdateDTO GetValidStreetcodeDto()
+    private static StreetcodeCreateUpdateDTO GetValidStreetcodeDto()
     {
         return new StreetcodeCreateDTO()
         {
@@ -447,6 +445,7 @@ public class BaseStreetcodeValidatorsTests
             DateString = "25 лютого (9 березня) 1814 року – 26 лютого (10 березня) 1861 року",
             StreetcodeType = StreetcodeType.Person,
             Status = StreetcodeStatus.Published,
+            EventStartOrPersonBirthDate = new DateTime(2000, 4, 2, 0, 0, 0, DateTimeKind.Local),
             Toponyms = new List<StreetcodeToponymCreateUpdateDTO>()
             {
                 new (),

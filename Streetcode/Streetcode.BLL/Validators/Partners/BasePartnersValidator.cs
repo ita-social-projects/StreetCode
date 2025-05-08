@@ -15,6 +15,7 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
     public const int UrlMaxLength = 200;
     public const int UrlTitleMaxLength = 100;
     private readonly IRepositoryWrapper _repositoryWrapper;
+
     public BasePartnersValidator(
         PartnerSourceLinkValidator partnerSourceLinkValidator,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
@@ -25,10 +26,10 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
         _repositoryWrapper = repositoryWrapper;
         RuleFor(dto => dto.Title)
             .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["Title"]])
-            .MaximumLength(TitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
+            .MaximumLength(TitleMaxLength).WithMessage(x => localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Title"], TitleMaxLength]);
 
         RuleFor(dto => dto.Description)
-            .MaximumLength(DescriptionMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Description"], DescriptionMaxLength]);
+            .MaximumLength(DescriptionMaxLength).WithMessage(x => localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Description"], DescriptionMaxLength]);
 
         RuleFor(dto => dto.TargetUrl)
             .NotEmpty().When(dto => !string.IsNullOrWhiteSpace(dto.UrlTitle))
@@ -36,16 +37,17 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
 
         RuleFor(dto => dto.TargetUrl)
             .MaximumLength(UrlMaxLength)
-            .WithMessage(x => localizer["MaxLength", fieldLocalizer["TargetUrl"], UrlMaxLength]);
+            .WithMessage(x => localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["TargetUrl"], UrlMaxLength]);
 
         RuleFor(dto => dto.TargetUrl).MustBeValidUrl()
             .When(dto => dto.TargetUrl != null)
             .WithMessage(x => localizer["ValidUrl", fieldLocalizer["TargetUrl"]]);
 
         RuleFor(dto => dto.UrlTitle)
-            .MaximumLength(UrlTitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["UrlTitle"], UrlTitleMaxLength]);
+            .MaximumLength(UrlTitleMaxLength).WithMessage(x => localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["UrlTitle"], UrlTitleMaxLength]);
 
-        RuleForEach(dto => dto.PartnerSourceLinks).SetValidator(partnerSourceLinkValidator);
+        RuleForEach(dto => dto.PartnerSourceLinks)
+            .SetValidator(partnerSourceLinkValidator);
 
         RuleFor(dto => dto.LogoId)
             .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token))

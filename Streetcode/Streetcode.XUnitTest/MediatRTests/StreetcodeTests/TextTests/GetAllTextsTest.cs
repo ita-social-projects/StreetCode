@@ -12,7 +12,7 @@ using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
-namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
+namespace Streetcode.XUnitTest.MediatRTests.StreetcodeTests.TextTests
 {
     public class GetAllTextsTest
     {
@@ -39,7 +39,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                 new Text() { Id = 1 },
             };
 
-            var testTextslistDTO = new List<TextDTO>()
+            var testTextslistDto = new List<TextDTO>()
             {
                 new TextDTO() { Id = 1 },
             };
@@ -53,7 +53,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 
             _mockMapper
                 .Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(testTextslistDTO);
+                .Returns(testTextslistDto);
             _mockLocalizerCannotFind
                 .Setup(x => x["CannotFindAnyText"])
                 .Returns(new LocalizedString("CannotFindAnyText", "Cannot find any text"));

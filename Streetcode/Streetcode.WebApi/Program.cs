@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using System.Threading.RateLimiting;
 using AspNetCoreRateLimit;
 using Hangfire;
@@ -32,6 +33,46 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 builder.Services.AddRateLimiter(options =>
 {
+    options.AddPolicy("ForgotPasswordRateLimit", httpContext =>
+    {
+        httpContext.Request.EnableBuffering();
+        using var reader = new StreamReader(
+            httpContext.Request.Body,
+            encoding: System.Text.Encoding.UTF8,
+            detectEncodingFromByteOrderMarks: false,
+            leaveOpen: true);
+        var body = reader.ReadToEndAsync().Result;
+        httpContext.Request.Body.Position = 0;
+
+        string? email = null;
+        try
+        {
+            var json = JsonDocument.Parse(body);
+            if (json.RootElement.TryGetProperty("email", out JsonElement emailElement))
+            {
+                email = emailElement.GetString();
+            }
+            else
+            {
+                Serilog.Log.Warning("Email field is missing in the request body for rate limiting in ForgotPasswordRateLimit policy.");
+            }
+        }
+        catch (JsonException ex)
+        {
+            Serilog.Log.Warning(ex, "Failed to parse email from request body for rate limiting in ForgotPasswordRateLimit policy.");
+        }
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: email ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 1,
+                QueueLimit = 0,
+                Window = TimeSpan.FromSeconds(60)
+            });
+    });
+
     options.AddPolicy("EmailRateLimit", context => RateLimitPartition.GetFixedWindowLimiter(
         partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
         factory: _ => new FixedWindowRateLimiterOptions

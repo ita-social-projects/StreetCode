@@ -300,19 +300,37 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             throw new ArgumentException(_stringLocalizerFailedToValidate["SizeMustBeTheSameAsInTemplate", _stringLocalizerFieldNames["CountOfArts"]], nameof(artSlides));
         }
 
-        var usedArtIds = new HashSet<int>(artSlidesList
-            .SelectMany(slide => slide.StreetcodeArts)
-            .Select(streetcodeArt => streetcodeArt.ArtId));
+        var existingArtIds = (await _repositoryWrapper.StreetcodeArtRepository
+            .GetAllAsync(art => art.StreetcodeId == streetcode.Id))
+            .Select(a => a.ArtId)
+            .ToHashSet();
+        foreach (var artSlide in artSlidesList)
+        {
+            foreach (var streetcodeArt in artSlide.StreetcodeArts)
+            {
+                if (existingArtIds.Contains(streetcodeArt.ArtId))
+                {
+                    throw new InvalidOperationException("Цей арт уже є в існуючих слайдах.");
+                }
 
-        var filteredArts = artsList
-            .Where(art => usedArtIds.Contains(art.Id))
-            .ToList();
+                existingArtIds.Add(streetcodeArt.ArtId);
+            }
+        }
 
         var newArtSlides = _mapper.Map<List<StreetcodeArtSlide>>(artSlidesList);
         newArtSlides.ForEach(artSlide => artSlide.StreetcodeId = streetcode.Id);
 
         await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(newArtSlides);
         await _repositoryWrapper.SaveChangesAsync();
+
+        var usedArtIds = artSlidesList
+            .SelectMany(slide => slide.StreetcodeArts)
+            .Select(streetcodeArt => streetcodeArt.ArtId)
+            .ToHashSet();
+
+        var filteredArts = artsList
+            .Where(art => usedArtIds.Contains(art.Id))
+            .ToList();
 
         var newArts = _mapper.Map<List<Art>>(filteredArts);
         newArts.ForEach(art => art.StreetcodeId = streetcode.Id);

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
@@ -34,7 +35,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         var json = response.Content;
         var jobject = JObject.Parse(json);
         var termsJson = jobject["terms"]?.ToString();
-        var returnedValue = JsonConvert.DeserializeObject<IEnumerable<TermDTO>>(termsJson);
+        var returnedValue = JsonConvert.DeserializeObject<IEnumerable<TermDto>>(termsJson);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

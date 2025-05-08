@@ -40,7 +40,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(returnedValue);
-        Assert.NotEmpty(returnedValue.Terms);
+        Assert.NotEmpty(returnedValue);
     }
 
     [Fact]

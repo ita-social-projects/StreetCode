@@ -12,7 +12,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
 
-public class GetStreetcodeShortByIdHandler : IRequestHandler<GetStreetcodeShortByIdQuery, Result<StreetcodeShortDTO>>
+public class GetStreetcodeShortByIdHandler : IRequestHandler<GetStreetcodeShortByIdQuery, Result<StreetcodeShortDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repository;
@@ -34,12 +34,12 @@ public class GetStreetcodeShortByIdHandler : IRequestHandler<GetStreetcodeShortB
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<StreetcodeShortDTO>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<StreetcodeShortDto>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.Id == request.Id;
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
-        var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(predicate);
+        var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(st => st.Id == request.Id);
 
         if (streetcode == null)
         {
@@ -48,7 +48,7 @@ public class GetStreetcodeShortByIdHandler : IRequestHandler<GetStreetcodeShortB
             return Result.Fail(new Error(errorMsg));
         }
 
-        var streetcodeShortDto = _mapper.Map<StreetcodeShortDTO>(streetcode);
+        var streetcodeShortDto = _mapper.Map<StreetcodeShortDto>(streetcode);
 
         if (streetcodeShortDto == null)
         {

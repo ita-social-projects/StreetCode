@@ -11,7 +11,6 @@ using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
@@ -44,7 +43,7 @@ public class GetParnerByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
+            .Map<IEnumerable<PartnerDto>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind);
@@ -69,7 +68,7 @@ public class GetParnerByStreetcodeIdTest
         var expectedError = _mockLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", testStreetcodeContent.Id].Value;
 
         _mockMapper
-            .Setup(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
+            .Setup(x => x.Map<IEnumerable<PartnerDto>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind);
@@ -91,7 +90,7 @@ public class GetParnerByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
+            .Map<IEnumerable<PartnerDto>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind);
@@ -103,7 +102,7 @@ public class GetParnerByStreetcodeIdTest
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess),
-            () => Assert.IsType<List<PartnerDTO>>(result.ValueOrDefault));
+            () => Assert.IsType<List<PartnerDto>>(result.ValueOrDefault));
     }
 
     [Fact]
@@ -121,8 +120,8 @@ public class GetParnerByStreetcodeIdTest
 
         // Asset
         Assert.Multiple(
-                () => Assert.IsType<Result<IEnumerable<PartnerDTO>>>(result),
-                () => Assert.IsAssignableFrom<IEnumerable<PartnerDTO>>(result.Value),
+                () => Assert.IsType<Result<IEnumerable<PartnerDto>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<PartnerDto>>(result.Value),
                 () => Assert.Empty(result.Value));
     }
 
@@ -170,11 +169,11 @@ public class GetParnerByStreetcodeIdTest
         return streetCodes;
     }
 
-    private static List<PartnerDTO> GetPartnerDTOList()
+    private static List<PartnerDto> GetPartnerDTOList()
     {
-        var partners = new List<PartnerDTO>
+        var partners = new List<PartnerDto>
         {
-            new PartnerDTO
+            new PartnerDto
             {
                 Id = 1,
             },

@@ -4,6 +4,7 @@ using Streetcode.XUnitTest.Mocks;
 using FluentValidation;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using FluentValidation.Results;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.BLL.MediatR.Streetcode.Term.Create;
 using Xunit;
 
@@ -21,14 +22,14 @@ namespace Streetcode.XUnitTest.Validators.Streetcode.Text.Term
             _mockValidationLocalizer = new MockFailedToValidateLocalizer();
             _mockBaseValidator = new Mock<BaseTermValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
 
-            _mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TermCreateDTO>>()))
+            _mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TermCreateDto>>()))
                 .Returns(new ValidationResult());
         }
 
         [Fact]
         public void ShouldCallBaseValidator()
         {
-            var query = new CreateTermCommand(new TermCreateDTO
+            var query = new CreateTermCommand(new TermCreateDto
             {
                 Title = "Test Title",
                 Description = "Test Description",
@@ -38,7 +39,7 @@ namespace Streetcode.XUnitTest.Validators.Streetcode.Text.Term
 
             createValidator.Validate(query);
 
-            _mockBaseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TermCreateDTO>>()), Times.Once);
+            _mockBaseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TermCreateDto>>()), Times.Once);
         }
     }
 }

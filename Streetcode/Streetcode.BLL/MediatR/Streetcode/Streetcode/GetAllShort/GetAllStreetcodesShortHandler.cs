@@ -12,8 +12,8 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
 
-public class GetAllStreetcodesShortHandler : IRequestHandler<GetAllStreetcodesShortQuery,
-    Result<IEnumerable<StreetcodeShortDTO>>>
+public class GetAllStreetcodesShortHandler
+    : IRequestHandler<GetAllStreetcodesShortQuery, Result<GetAllStreetcodesShortDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -32,20 +32,27 @@ public class GetAllStreetcodesShortHandler : IRequestHandler<GetAllStreetcodesSh
         _stringLocalizerNo = stringLocalizerNo;
     }
 
-    public async Task<Result<IEnumerable<StreetcodeShortDTO>>> Handle(GetAllStreetcodesShortQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetAllStreetcodesShortDto>> Handle(GetAllStreetcodesShortQuery request, CancellationToken cancellationToken)
+    {
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+        var paginatedStreetcodesShort = _repositoryWrapper.StreetcodeRepository
+            .GetAllPaginated(request.page, request.pageSize, predicate: predicate);
+
+        if (!paginatedStreetcodesShort.Entities.Any())
         {
-            Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
-            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
-
-            var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(predicate: predicate);
-
-            if (streetcodes.Any())
-            {
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
-            }
-
             var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
-            return Result.Fail(errorMsg);
+            return Result.Fail<GetAllStreetcodesShortDto>(errorMsg);
+        }
+
+        var resultDto = new GetAllStreetcodesShortDto
+        {
+            TotalAmount = paginatedStreetcodesShort.TotalItems,
+            StreetcodesShort = _mapper.Map<IEnumerable<StreetcodeShortDto>>(paginatedStreetcodesShort.Entities),
+        };
+
+        return Result.Ok(resultDto);
     }
 }

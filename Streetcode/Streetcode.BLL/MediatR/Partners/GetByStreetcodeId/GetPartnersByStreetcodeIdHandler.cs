@@ -13,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 
-public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStreetcodeIdQuery, Result<IEnumerable<PartnerDTO>>>
+public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStreetcodeIdQuery, Result<IEnumerable<PartnerDto>>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -28,7 +28,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<PartnerDto>>> Handle(GetPartnersByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<StreetcodeContent, bool>>? basePredicate = str => str.Id == request.StreetcodeId;
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
@@ -51,9 +51,9 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
         {
             string message = "Returning empty enumerable of partners";
             _logger.LogInformation(message);
-            return Result.Ok(Enumerable.Empty<PartnerDTO>());
+            return Result.Ok(Enumerable.Empty<PartnerDto>());
         }
 
-        return Result.Ok(_mapper.Map<IEnumerable<PartnerDTO>>(partners));
+        return Result.Ok(_mapper.Map<IEnumerable<PartnerDto>>(partners));
     }
 }

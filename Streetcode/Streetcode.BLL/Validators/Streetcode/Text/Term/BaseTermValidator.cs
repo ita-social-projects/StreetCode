@@ -2,10 +2,11 @@
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 
 namespace Streetcode.BLL.Validators.Streetcode.Text.Term
 {
-    public class BaseTermValidator : AbstractValidator<TermCreateDTO>
+    public class BaseTermValidator : AbstractValidator<TermCreateDto>
     {
         public const int TitleMaxLength = 50;
         public const int DescriptionMaxLength = 500;

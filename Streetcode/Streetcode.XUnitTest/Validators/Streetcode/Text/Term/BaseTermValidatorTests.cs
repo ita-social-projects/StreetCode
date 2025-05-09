@@ -2,6 +2,7 @@
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Validators.Streetcode.Text.Term;
 using Streetcode.XUnitTest.Mocks;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Xunit;
 
 namespace Streetcode.XUnitTest.Validators.Streetcode.Text.Term
@@ -109,9 +110,9 @@ namespace Streetcode.XUnitTest.Validators.Streetcode.Text.Term
             result.ShouldHaveValidationErrorFor(x => x.Description).WithErrorMessage(expectedDescriptionError);
         }
 
-        public static TermCreateDTO GetValidTermCreateDto()
+        public static TermCreateDto GetValidTermCreateDto()
         {
-            return new TermCreateDTO()
+            return new TermCreateDto()
             {
                 Title = "Title Test",
                 Description = "Description Test",

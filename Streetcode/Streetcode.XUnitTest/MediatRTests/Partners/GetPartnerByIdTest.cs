@@ -43,8 +43,8 @@ public class GetPartnerByIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<PartnerDTO>(It.IsAny<Partner>()))
-            .Returns(GetPartnerDto());
+            .Map<PartnerDto>(It.IsAny<Partner>()))
+            .Returns(GetPartnerDTO());
 
         var handler = new GetPartnerByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -83,8 +83,8 @@ public class GetPartnerByIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<PartnerDTO?>(It.IsAny<Partner>()))
-            .Returns(GetPartnerDtoWithNotExistingId());
+            .Map<PartnerDto?>(It.IsAny<Partner>()))
+            .Returns(GetPartnerDTOWithNotExistingId());
 
         var handler = new GetPartnerByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -112,8 +112,8 @@ public class GetPartnerByIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<PartnerDTO>(It.IsAny<Partner>()))
-            .Returns(GetPartnerDto());
+            .Map<PartnerDto>(It.IsAny<Partner>()))
+            .Returns(GetPartnerDTO());
 
         var handler = new GetPartnerByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -123,7 +123,7 @@ public class GetPartnerByIdTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result.ValueOrDefault),
-            () => Assert.IsType<PartnerDTO>(result.ValueOrDefault));
+            () => Assert.IsType<PartnerDto>(result.ValueOrDefault));
     }
 
     private static Partner GetPartner()
@@ -139,15 +139,15 @@ public class GetPartnerByIdTest
         return null;
     }
 
-    private static PartnerDTO GetPartnerDto()
+    private static PartnerDto GetPartnerDTO()
     {
-        return new PartnerDTO
+        return new PartnerDto
         {
             Id = 1,
         };
     }
 
-    private static PartnerDTO? GetPartnerDtoWithNotExistingId()
+    private static PartnerDto? GetPartnerDTOWithNotExistingId()
     {
         return null;
     }

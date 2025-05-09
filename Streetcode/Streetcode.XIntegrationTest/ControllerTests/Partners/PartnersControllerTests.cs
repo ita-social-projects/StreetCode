@@ -10,7 +10,6 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Partners;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Partner;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
@@ -64,7 +63,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllPartnersResponseDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllPartnersDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -75,7 +74,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         {
             Partner expectedPartner = this.testPartner;
             var response = await this.Client.GetByIdAsync(expectedPartner.Id);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PartnerDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PartnerDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -105,7 +104,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
             int streetcodeId = this.testStreetcodeContent.Id;
 
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDto>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);

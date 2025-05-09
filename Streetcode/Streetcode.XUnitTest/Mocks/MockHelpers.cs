@@ -11,6 +11,7 @@ using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.XUnitTest.Mocks;
@@ -142,17 +143,6 @@ public static class MockHelpers
             .ReturnsAsync(getAllAsyncResult);
     }
 
-    public static void SetupMockTermRepositoryGetAllAsync(
-        Mock<IRepositoryWrapper> mockRepositoryWrapper,
-        List<Term> getAllAsyncResult)
-    {
-        mockRepositoryWrapper
-            .Setup(x => x.TermRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Term, bool>>>(),
-                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()))
-            .ReturnsAsync(getAllAsyncResult);
-    }
-
     public static void SetupMockTextRepositoryGetAllAsync(
         Mock<IRepositoryWrapper> mockRepositoryWrapper,
         List<Text> getAllAsyncResult)
@@ -162,6 +152,38 @@ public static class MockHelpers
                 It.IsAny<Expression<Func<Text, bool>>>(),
                 It.IsAny<Func<IQueryable<Text>, IIncludableQueryable<Text, object>>>()))
             .ReturnsAsync(getAllAsyncResult);
+    }
+
+    public static void SetupMockTermRepositoryGetAllPaginated(
+        Mock<IRepositoryWrapper> mockRepositoryWrapper,
+        PaginationResponse<Term> getAllPaginatedResult)
+    {
+        mockRepositoryWrapper
+            .Setup(x => x.TermRepository.GetAllPaginated(
+                It.IsAny<ushort?>(),
+                It.IsAny<ushort?>(),
+                It.IsAny<Expression<Func<Term, Term>>?>(),
+                It.IsAny<Expression<Func<Term, bool>>?>(),
+                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>?>(),
+                It.IsAny<Expression<Func<Term, object>>?>(),
+                It.IsAny<Expression<Func<Term, object>>?>()))
+            .Returns(getAllPaginatedResult);
+    }
+
+    public static void SetupMockStreetcodeRepositoryGetAllPaginated(
+        Mock<IRepositoryWrapper> mockRepositoryWrapper,
+        PaginationResponse<StreetcodeContent> getAllPaginatedResult)
+    {
+        mockRepositoryWrapper
+            .Setup(x => x.StreetcodeRepository.GetAllPaginated(
+                It.IsAny<ushort?>(),
+                It.IsAny<ushort?>(),
+                It.IsAny<Expression<Func<StreetcodeContent, StreetcodeContent>>?>(),
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>(),
+                It.IsAny<Expression<Func<StreetcodeContent, object>>?>(),
+                It.IsAny<Expression<Func<StreetcodeContent, object>>?>()))
+            .Returns(getAllPaginatedResult);
     }
 
     // This method will return existing streetcode ids

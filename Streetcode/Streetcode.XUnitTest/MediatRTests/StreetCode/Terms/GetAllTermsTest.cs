@@ -1,14 +1,14 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.BLL.MediatR.Streetcode.Term.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms;
 
@@ -29,120 +29,101 @@ public class GetAllTermsTest
     public async Task ShouldGetAllSuccessfully_WhenTermsExist()
     {
         // Arrange
-        var (termsList, termDtoList) = GetTermObjectsLists();
-        var request = GetRequest();
+        var terms = GetTermEntities(2);
+        var termDtos = GetTermDtos(2);
+        var request = new GetAllTermsQuery();
 
-        MockHelpers.SetupMockTermRepositoryGetAllAsync(_mockRepository, termsList);
-        MockHelpers.SetupMockMapper<IEnumerable<TermDTO>, List<Term>>(_mockMapper, termDtoList, termsList);
-
-        // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-
-        var value = result.Value.Should().BeAssignableTo<GetAllTermsResponseDto>().Which;
-
-        var terms = value.Terms;
-
-        terms.Should().SatisfyRespectively(
-            first => first.Id.Should().Be(termsList[0].Id),
-            second => second.Id.Should().Be(termsList[1].Id));
-
-        terms.Should().HaveCount(2);
-
-        VerifyGetAllAsyncAndMockingOperationsExecution(termsList);
-    }
-
-    [Fact]
-    public async Task ShouldGetAllSuccessfully_WithCorrectDataType()
-    {
-        // Arrange
-        var (termsList, termDtoList) = GetTermObjectsLists();
-        var request = GetRequest();
-
-        MockHelpers.SetupMockTermRepositoryGetAllAsync(_mockRepository, termsList);
-        MockHelpers.SetupMockMapper<IEnumerable<TermDTO>, List<Term>>(_mockMapper, termDtoList, termsList);
-
-        // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.ValueOrDefault.Should().BeOfType<GetAllTermsResponseDto>();
-        result.ValueOrDefault.Terms.Should().BeAssignableTo<List<TermDTO>>();
-    }
-
-    [Fact]
-    public async Task ShouldGetAllSuccessfully_WhenTermsNotExist()
-    {
-        // Arrange
-        var (termsList, termDtoList) = GetEmptyTermObjectsLists();
-        var request = GetRequest();
-
-        MockHelpers.SetupMockTermRepositoryGetAllAsync(_mockRepository, termsList);
-        MockHelpers.SetupMockMapper(_mockMapper, termDtoList, termsList);
-
-        // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-
-        var value = result.Value.Should().BeAssignableTo<GetAllTermsResponseDto>().Which;
-
-        value.Terms.Should().BeEmpty();
-
-        result.ValueOrDefault.Should().BeAssignableTo<GetAllTermsResponseDto>();
-
-        VerifyGetAllAsyncAndMockingOperationsExecution(termsList);
-    }
-
-    private static (List<Term>, List<TermDTO>) GetTermObjectsLists()
-    {
-        var termsList = new List<Term>()
-        {
-            new Term()
-            {
-                Id = 1,
-            },
-            new Term()
-            {
-                Id = 2,
-            },
-        };
-        var termDtoList = new List<TermDTO>()
-        {
-            new TermDTO()
-            {
-                Id = termsList[0].Id,
-            },
-            new TermDTO()
-            {
-                Id = termsList[1].Id,
-            },
-        };
-
-        return (termsList, termDtoList);
-    }
-
-    private static (List<Term>, List<TermDTO>) GetEmptyTermObjectsLists()
-    {
-        return (new List<Term>(), new List<TermDTO>());
-    }
-
-    private static GetAllTermsQuery GetRequest()
-    {
-        return new GetAllTermsQuery();
-    }
-
-    private void VerifyGetAllAsyncAndMockingOperationsExecution(List<Term> termsList)
-    {
-        _mockRepository.Verify(
-            x => x.TermRepository.GetAllAsync(
+        _mockRepository.Setup(r => r.TermRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Term, bool>>>(),
-                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()),
-            Times.Once);
-        _mockMapper.Verify(x => x.Map<IEnumerable<TermDTO>>(termsList), Times.Once);
+                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()))
+            .ReturnsAsync(terms);
+
+        _mockMapper.Setup(m => m.Map<IEnumerable<TermDto>>(terms))
+            .Returns(termDtos);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Terms.Should().HaveCount(2);
+        result.Value.Terms.Select(t => t.Id).Should().ContainInOrder(0, 1);
+
+        VerifyGetAllAndMapping(terms);
+    }
+
+    [Fact]
+    public async Task ShouldReturnEmpty_WhenNoTermsExist()
+    {
+        // Arrange
+        var terms = new List<Term>();
+        var termDtos = new List<TermDto>();
+        var request = new GetAllTermsQuery();
+
+        _mockRepository.Setup(r => r.TermRepository.GetAllAsync(
+                It.IsAny<Expression<Func<Term, bool>>>(),
+                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()))
+            .ReturnsAsync(terms);
+
+        _mockMapper.Setup(m => m.Map<IEnumerable<TermDto>>(terms))
+            .Returns(termDtos);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Terms.Should().BeEmpty();
+
+        VerifyGetAllAndMapping(terms);
+    }
+
+    [Fact]
+    public async Task ShouldReturnCorrectDataType()
+    {
+        // Arrange
+        var terms = GetTermEntities(2);
+        var termDtos = GetTermDtos(2);
+        var request = new GetAllTermsQuery();
+
+        _mockRepository.Setup(r => r.TermRepository.GetAllAsync(
+                It.IsAny<Expression<Func<Term, bool>>>(),
+                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()))
+            .ReturnsAsync(terms);
+
+        _mockMapper.Setup(m => m.Map<IEnumerable<TermDto>>(terms))
+            .Returns(termDtos);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Terms.Should().BeOfType<List<TermDto>>();
+
+        VerifyGetAllAndMapping(terms);
+    }
+
+    private static List<Term> GetTermEntities(int count)
+    {
+        return Enumerable.Range(0, count)
+            .Select(i => new Term { Id = i })
+            .ToList();
+    }
+
+    private static List<TermDto> GetTermDtos(int count)
+    {
+        return Enumerable.Range(0, count)
+            .Select(i => new TermDto { Id = i })
+            .ToList();
+    }
+
+    private void VerifyGetAllAndMapping(IEnumerable<Term> terms)
+    {
+        _mockRepository.Verify(r => r.TermRepository.GetAllAsync(
+            It.IsAny<Expression<Func<Term, bool>>>(),
+            It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()), Times.Once);
+
+        _mockMapper.Verify(m => m.Map<IEnumerable<TermDto>>(terms), Times.Once);
     }
 }

@@ -28,6 +28,8 @@ public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllT
     public async Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
     {
         var searchTitle = request.title?.Trim().ToLower();
+        int page = request.page ?? 1;
+        int pageSize = request.pageSize ?? 10;
 
         var allTeams = await _repositoryWrapper
             .TeamRepository
@@ -54,12 +56,10 @@ public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllT
         if (request.IsMain.HasValue)
         {
             filteredContexts = filteredContexts.Where(context => context.IsMain == request.IsMain.Value);
+            page = 1;
         }
 
         var totalItems = filteredContexts.Count();
-
-        int page = request.page ?? 1;
-        int pageSize = request.pageSize ?? 10;
 
         var paginatedContexts = filteredContexts
             .Skip((page - 1) * pageSize)

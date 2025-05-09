@@ -33,8 +33,8 @@ public class DeletePartnerTest
         // Arrange
         var testPartner = GetPartner();
 
-        _mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
-            .Returns(GetPartnerDto());
+        _mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
+            .Returns(GetPartnerDTO());
 
         _mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
             .ReturnsAsync(testPartner);
@@ -50,7 +50,7 @@ public class DeletePartnerTest
             () => Assert.True(result.IsSuccess));
 
         _mockRepository.Verify(x => x.PartnersRepository.Delete(It.Is<Partner>(x => x.Id == testPartner.Id)), Times.Once);
-        _mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
+        _mockRepository.Verify(x => x.SaveChanges(), Times.Once);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class DeletePartnerTest
         var result = await handler.Handle(new DeletePartnerQuery(testPartner.Id), CancellationToken.None);
 
         // Assert
-        Assert.Equal(expectedError, result.Errors[0].Message);
+        Assert.Equal(expectedError, result.Errors.FirstOrDefault()?.Message);
 
         _mockRepository.Verify(x => x.PartnersRepository.Delete(It.IsAny<Partner>()), Times.Never);
     }
@@ -83,12 +83,12 @@ public class DeletePartnerTest
         var testPartner = GetPartner();
         var expectedError = "The partner wasn`t added";
 
-        _mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
-            .Returns(GetPartnerDto());
+        _mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
+            .Returns(GetPartnerDTO());
 
         _mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
             .ReturnsAsync(testPartner);
-        _mockRepository.Setup(x => x.SaveChangesAsync())
+        _mockRepository.Setup(x => x.SaveChanges())
             .Throws(new Exception(expectedError));
 
         // Act
@@ -97,7 +97,7 @@ public class DeletePartnerTest
         var result = await handler.Handle(new DeletePartnerQuery(testPartner.Id), CancellationToken.None);
 
         // Assert
-        Assert.Equal(expectedError, result.Errors[0].Message);
+        Assert.Equal(expectedError, result.Errors.FirstOrDefault()?.Message);
     }
 
     private static Partner GetPartner()
@@ -108,9 +108,9 @@ public class DeletePartnerTest
         };
     }
 
-    private static PartnerDTO GetPartnerDto()
+    private static PartnerDto GetPartnerDTO()
     {
-        return new PartnerDTO();
+        return new PartnerDto();
     }
 
     private static Partner? GetPartnerWithNotExistingId()

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.BLL.Validators.Streetcode.Text.Term;
 using TermEntity = Streetcode.DAL.Entities.Streetcode.TextContent.Term;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -253,7 +253,7 @@ namespace Streetcode.XUnitTest.Validators.Streetcode.Text.Term
 
         public UpdateTermCommand GetValidUpdateTermCommand()
         {
-            return new UpdateTermCommand(new TermDTO
+            return new UpdateTermCommand(new TermDto
             {
                 Id = 1,
                 Title = "Valid title",

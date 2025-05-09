@@ -273,7 +273,7 @@ public class BasePartnersValidatorTests
                     TargetUrl = "http://test.com",
                 },
             },
-            Streetcodes = new List<StreetcodeShortDTO>()
+            Streetcodes = new List<StreetcodeShortDto>()
             {
                 new () { Id = 1 },
                 new () { Id = 3 },

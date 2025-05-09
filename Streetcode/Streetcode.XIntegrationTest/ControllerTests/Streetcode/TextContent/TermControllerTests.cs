@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
@@ -34,11 +35,12 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         var json = response.Content;
         var jobject = JObject.Parse(json);
         var termsJson = jobject["terms"]?.ToString();
-        var returnedValue = JsonConvert.DeserializeObject<IEnumerable<TermDTO>>(termsJson);
+        var returnedValue = JsonConvert.DeserializeObject<IEnumerable<TermDto>>(termsJson);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(returnedValue);
+        Assert.NotEmpty(returnedValue);
     }
 
     [Fact]
@@ -49,7 +51,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
 
         // Act
         var response = await this.Client.GetByIdAsync(termId);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDto>(response.Content);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -68,7 +70,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
 
         // Act
         var response = await this.Client.GetByIdAsync(termId);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDto>(response.Content);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -84,7 +86,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
 
         // Act
         var response = await this.Client.Create(termCreateDto, this.TokenStorage.AdminAccessToken);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDto>(response.Content);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -104,7 +106,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
 
         // Act
         var response = await this.Client.Create(termCreateDto, this.TokenStorage.AdminAccessToken);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDto>(response.Content);
 
         // Assert
         Assert.Equal(400, (int)response.StatusCode);
@@ -120,7 +122,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
 
         // Act
         var response = await this.Client.Create(termCreateDto);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDto>(response.Content);
 
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -136,7 +138,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
 
         // Act
         var response = await this.Client.Create(termCreateDto, this.TokenStorage.UserAccessToken);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDto>(response.Content);
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);

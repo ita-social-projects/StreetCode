@@ -1,0 +1,4 @@
+﻿BEGIN
+    SELECT 1 FROM [AspNetUsers];
+END;
+GO

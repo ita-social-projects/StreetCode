@@ -22,7 +22,7 @@ public class Program
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        Console.WriteLine($"Connection string: {connectionString}");
+       
         try
         {
             var upgrader =

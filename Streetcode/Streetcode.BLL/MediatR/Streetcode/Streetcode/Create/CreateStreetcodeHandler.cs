@@ -297,7 +297,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         if (artSlidesList.Any(artSlide => amountOfArts !=
                                           StreetcodeArtSlideTemplateConsts.CountOfArtsInTemplateDictionary[artSlide.Template]))
         {
-            throw new ArgumentException(_stringLocalizerFailedToValidate["SizeMustBeTheSameAsInTemplate", _stringLocalizerFieldNames["CountOfArts"]], nameof(artSlides));
+            throw new ArgumentException(_stringLocalizerFailedToValidate["AmountMustBeTheSameAsInTemplate", _stringLocalizerFieldNames["CountOfArts"]], nameof(artSlides));
         }
 
         var existingArtIds = (await _repositoryWrapper.StreetcodeArtRepository

@@ -2,20 +2,20 @@ namespace Streetcode.DAL.Enums;
 
 public enum StreetcodeArtSlideTemplate
 {
-    OneToTwo = 0,
-    OneToTwoAndThreeToFour = 1,
-    OneToFour = 2,
-    OneToFourAndFiveToSix = 3,
-    OneToTwoAndThreeToFourAndFiveToSix = 4,
-    OneToFourAndFiveAndSix = 5,
-    OneToTwoAndThreeToFourAndFive = 6,
+    OneToFourAndFiveToSix = 0,
+    OneToTwoAndThreeToFourAndFiveToSix = 1,
+    OneAndTwoAndThreeAndFourAndFiveAndSix = 2,
+    OneToFour = 3,
+    OneToTwo = 4,
+    OneToTwoAndThreeToFour = 5,
+    OneToFourAndFiveAndSix = 6,
     OneAndTwoAndThreeToFour = 7,
     OneAndTwoAndThreeAndFour = 8,
-    OneAndTwoAndThreeToFourAndFive = 9,
+    OneToTwoAndThreeToFourAndFive = 9,
     OneAndTwoAndThreeToFourAndFiveToSix = 10,
-    OneAndTwoAndThreeAndFourAndFive = 11,
+    OneAndTwoAndThreeToFourAndFive = 11,
     OneAndTwoAndThreeToFourAndFiveAndSix = 12,
-    OneAndTwoAndThreeAndFourAndFiveAndSix = 13,
+    OneAndTwoAndThreeAndFourAndFive = 13,
 }
 
 public static class StreetcodeArtSlideTemplateConsts

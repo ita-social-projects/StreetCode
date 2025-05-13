@@ -246,7 +246,17 @@ pipeline {
                     sleep 10
                     docker compose --env-file /etc/environment up -d"""
 
+                   if (currentBuild.result == 'SUCCESS') {
+                sendDiscordNotification('SUCCESS', 'Deployment to Stage completed successfully.')
+            } else if (currentBuild.result == 'ABORTED') {
+                sendDiscordNotification('ABORTED', 'Deployment to Stage was aborted.')
+            } else if (currentBuild.result == 'FAILURE') {
+                sendDiscordNotification('FAILED', 'Deployment to Stage failed.')
+            }
+                   /*
                     sendDiscordNotification('SUCCESS', 'Deployment to Stage completed successfully.')
+                    */
+                   
 
                 }  
             }
@@ -292,6 +302,11 @@ pipeline {
             }
             
          }
+           failure {
+            script {
+                sendDiscordNotification('FAILED', 'Unexpected failure in "WHAT IS THE NEXT STEP" stage.')
+            }
+        }
          success {
                 script {
                     isSuccess = '1'
@@ -418,7 +433,7 @@ post {
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
-
+/*
     success {
         script {
             sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
@@ -434,7 +449,7 @@ post {
             sendDiscordNotification('ABORTED', 'Deployment pipeline was aborted.')
         }
     }
-
+*/
 
 
 }

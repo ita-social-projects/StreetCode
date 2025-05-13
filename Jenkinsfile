@@ -1,6 +1,8 @@
 def CODE_VERSION = ''     
 def IS_IMAGE_BUILDED = false
+def IS_DBUPDATE_IMAGE_BUILDED = false
 def IS_IMAGE_PUSH = false
+def IS_DBUPDATE_IMAGE_PUSH = false
 def isSuccess
 def preDeployFrontStage
 def preDeployBackStage
@@ -11,7 +13,8 @@ pipeline {
         label 'stage' 
     }
      environment {
-        GH_TOKEN = credentials('GH_TOKEN')     
+        GH_TOKEN = credentials('GH_TOKEN')
+        DISCORD_WEBHOOK_URL = credentials('WEBHOOK_URL')     
     }
     options {
     skipDefaultCheckout true
@@ -45,7 +48,16 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
+
+                    // Check if the tool is already installed
+            def coverageInstalled = sh(script: 'dotnet tool list --global | grep dotnet-coverage', returnStatus: true) == 0
+
+            if (!coverageInstalled) {
+                sh 'dotnet tool install --global dotnet-coverage --version 17.13.1'
+            } else {
+                echo 'dotnet-coverage is already installed.'
+            }
+                    //sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
                     sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'
@@ -138,40 +150,81 @@ pipeline {
                 }
             }
         }
-        stage('Build image') {
+        stage('Build images') {
+            
             when {
-                branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"
+                branch pattern: "release/\\d+\\.\\d+\\.\\d+", comparator: "REGEXP"
                
             }
+            
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                        sh "docker build -t ${username}/streetcode:latest ."
+                        env.DOCKER_USERNAME = username
+                        // Build the backend image
+                        sh "docker build -f Dockerfile -t ${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION} ."
                         IS_IMAGE_BUILDED = true
+
+                        // Build the dbupdate image
+                        sh "docker build -f Dockerfile.dbupdate -t ${env.DOCKER_USERNAME}/dbupdate:${env.CODE_VERSION} ."
+                        IS_DBUPDATE_IMAGE_BUILDED = true
                     }
                 }
             }
         }
-        stage('Push image') {
+
+
+         stage('Trivy Security Scan') {
+             when {
+                expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
+            }   
+            steps {
+                script {
+                     def imagesToScan = [
+                "${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION}",
+                "${env.DOCKER_USERNAME}/dbupdate:${env.CODE_VERSION}"
+            ]
+             imagesToScan.each { image ->
+                echo "Running Trivy scan on ${image}"
+                // Run Trivy scan and display the output in the console log ( || true - don't fail on exit code)
+                sh """
+                    docker run --rm \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    aquasec/trivy image --no-progress --severity HIGH,CRITICAL --exit-code 1 ${image} || true
+                """
+            }
+                }
+            }
+        }
+
+
+
+        stage('Push images') {
             when {
-                expression { IS_IMAGE_BUILDED == true }
+                expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
             }   
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
                         sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                        sh "docker push ${username}/streetcode:latest"
-                        sh "docker tag  ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
+
                         sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
                         IS_IMAGE_PUSH = true
-                
+
+                        sh "docker push ${username}/dbupdate:${env.CODE_VERSION}"
+                        IS_DBUPDATE_IMAGE_PUSH = true
+
                     }
                 }
             }
         }
+
+
+
+        
     stage('Deploy Stage'){
         when {
-                expression { IS_IMAGE_PUSH == true }
+                expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
             }  
         steps {
             input message: 'Do you want to approve Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
@@ -195,19 +248,37 @@ pipeline {
                     sh 'docker system prune --force --filter "until=72h"'
                     sh """ export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
                     export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-                    docker stop backend frontend nginx loki certbot
+                    docker stop backend frontend nginx loki certbot dbupdate
                     docker container prune -f                
                     docker volume prune -f
                     docker network prune -f
                     sleep 10
                     docker compose --env-file /etc/environment up -d"""
 
+                   if (currentBuild.result == 'SUCCESS') {
+                sendDiscordNotification('SUCCESS', 'Deployment to Stage completed successfully.')
+            } else if (currentBuild.result == 'ABORTED') {
+                sendDiscordNotification('ABORTED', 'Deployment to Stage was aborted.')
+            } else if (currentBuild.result == 'FAILURE') {
+                sendDiscordNotification('FAILED', 'Deployment to Stage failed.')
+            }
+                   /*
+                    sendDiscordNotification('SUCCESS', 'Deployment to Stage completed successfully.')
+                    */
+                   
+
                 }  
             }
      }    
+
+
+
+
+
+
     stage('WHAT IS THE NEXT STEP') {
        when {
-                expression { IS_IMAGE_PUSH == true }
+                expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
             }  
         steps {
              script {
@@ -228,16 +299,23 @@ pipeline {
                sh """
                export DOCKER_TAG_BACKEND=${preDeployBackStage}
                export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-               docker stop backend frontend nginx loki certbot
+               docker stop backend frontend nginx loki certbot dbupdate
                docker container prune -f
                docker volume prune -f
                docker network prune -f
                sleep 10
                docker compose --env-file /etc/environment up -d"""
+
+               sendDiscordNotification('ABORTED', 'Deployment to Stage was aborted and rolled back.')
                
             }
             
          }
+           failure {
+            script {
+                sendDiscordNotification('FAILED', 'Unexpected failure in "WHAT IS THE NEXT STEP" stage.')
+            }
+        }
          success {
                 script {
                     isSuccess = '1'
@@ -245,7 +323,14 @@ pipeline {
             }
       }
     }
+
+
+
+
+
+
     /*
+
    stage('Deploy prod') {
          agent { 
            label 'production' 
@@ -286,7 +371,10 @@ pipeline {
             }
         }
     }
+
 */
+
+
     stage('Sync after release') {
         when {
            expression { isSuccess == '1' }
@@ -314,6 +402,10 @@ pipeline {
             }
         }
     }
+
+
+
+
     /*
     stage('Rollback Prod') {  
         agent { 
@@ -340,12 +432,61 @@ pipeline {
                 }
             }    
         }
+
     */
+
     }
+
 post { 
     always { 
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
+/*
+    success {
+        script {
+            sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
+        }
+    }
+    failure {
+        script {
+            sendDiscordNotification('FAILED', 'Deployment pipeline failed.')
+        }
+    }
+    aborted {
+        script {
+            sendDiscordNotification('ABORTED', 'Deployment pipeline was aborted.')
+        }
+    }
+*/
+
+
 }
 }
+
+
+
+def sendDiscordNotification(status, message) {
+    withCredentials([string(credentialsId: 'WEBHOOK_URL', variable: 'DISCORD_WEBHOOK_URL')]) {
+       def jsonMessage = """ 
+       {
+            "content": "$status: $message",
+            "embeds": [
+                {
+                    "title": "Deployment Status",
+                    "fields": [
+                        {"name": "Environment", "value": "Stage", "inline": true},
+                        {"name": "Pipeline Name", "value": "$env.JOB_NAME", "inline": true},
+                        {"name": "Status", "value": "$status", "inline": true},
+                        {"name": "Deployment Tag", "value": "$env.CODE_VERSION", "inline": true},
+                        {"name": "Date and Time", "value": "${new Date().format('yyyy-MM-dd HH:mm:ss')}", "inline": true},
+                        {"name": "Pipeline Link", "value": "[Click here]($env.BUILD_URL)", "inline": true}
+                    ]
+                }
+            ]
+        }
+        """
+        sh """curl -X POST -H 'Content-Type: application/json' -d '$jsonMessage' "\$DISCORD_WEBHOOK_URL" """
+    }
+}
+

@@ -48,7 +48,16 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
+
+                    // Check if the tool is already installed
+            def coverageInstalled = sh(script: 'dotnet tool list --global | grep dotnet-coverage', returnStatus: true) == 0
+
+            if (!coverageInstalled) {
+                sh 'dotnet tool install --global dotnet-coverage --version 17.13.1'
+            } else {
+                echo 'dotnet-coverage is already installed.'
+            }
+                    //sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
                     sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'
